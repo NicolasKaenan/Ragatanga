@@ -31,7 +31,7 @@ const registerUser = async () => {
 // Function to log in a user and return the JWT token
 const loginUser = async () => {
     const loginData = {
-        user_name: "johnDoe", // Replace with the username
+        email: "john@example.com", // Replace with the username
         password: "mySecurePassword123" // Replace with the password
     };
 
@@ -90,17 +90,44 @@ const postQuestion = async (token) => {
     }
 };
 
+const answerQuestion = async (token) => {
+    const answerData = {
+        content: "sla porra", // Replace with the question title
+    };
+
+    try {
+        const response = await fetch('http://localhost:3000/answer/1', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Sending JSON data
+                Authorization: `Bearer ${token}` // Include the JWT token in the Authorization header
+            },
+            body: JSON.stringify(answerData), // Convert JavaScript object to JSON string
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            console.log("Question answered Successfully:", result.message);
+        } else {
+            console.error('Post answer Error:', result.error);
+        }
+    } catch (error) {
+        console.error('Network Error:', error);
+    }
+};
+
 // Register a user, log them in, and post a question
 const main = async () => {
     // Uncomment the line below to register a new user (optional)
-    // await registerUser();
+    //await registerUser();
 
     // Log in the user and get the JWT token
     const token = await loginUser();
-
     if (token) {
         // Post a question using the retrieved token
-        await postQuestion(token);
+        //await postQuestion(token);
+        await answerQuestion(token);
     }
 };
 
