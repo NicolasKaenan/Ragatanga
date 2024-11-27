@@ -17,7 +17,7 @@
             background-color: #f5f5f5;
         }
 
-        .logo{
+        .logo {
             width: 12%;
         }
 
@@ -25,6 +25,11 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+        }
+
+        .main{
+            min-height: 57vh;
+            width: 100%;
         }
 
         .header {
@@ -653,7 +658,6 @@
         .social-icon:hover {
             color: #d32f2f;
         }
-
     </style>
 </head>
 
@@ -678,144 +682,147 @@
         </div>
     </header>
 
-    <div id="deleteModal" class="modal">
-        <div class="modal-content">
-            <h2>Confirmar Exclusão</h2>
-            <p>Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.</p>
-            <div class="modal-buttons">
-                <button class="modal-button cancel-button" onclick="closeDeleteModal()">Cancelar</button>
-                <button class="modal-button confirm-button" onclick="deleteAccount()">Confirmar Exclusão</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Profile Modal -->
-    <div id="editProfileModal" class="modal">
-        <div class="modal-content" style="max-width: 400px;">
-            <h2>Editar Perfil</h2>
-            <form id="editProfileForm" class="new-question-form">
-                <input type="text" placeholder="Nome" id="editName" required>
-                <input type="tel" placeholder="Telefone" id="editPhone" required>
-                <input type="email" placeholder="Email" id="editEmail" required>
-                <input type="password" placeholder="Nova Senha (opcional)" id="editPassword">
-                <button type="submit" class="submit-answer">Salvar Alterações</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Password Confirmation Modal -->
-    <div id="passwordConfirmModal" class="modal">
-        <div class="modal-content" style="max-width: 400px;">
-            <h2>Confirmar Senha</h2>
-            <p>Por favor, insira sua senha atual para confirmar as alterações.</p>
-            <form id="passwordConfirmForm" class="new-question-form">
-                <input type="password" placeholder="Senha atual" required>
+    <div class="main">
+        <div id="deleteModal" class="modal">
+            <div class="modal-content">
+                <h2>Confirmar Exclusão</h2>
+                <p>Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.</p>
                 <div class="modal-buttons">
-                    <button type="button" class="modal-button cancel-button"
-                        onclick="closePasswordConfirmModal()">Cancelar</button>
-                    <button type="submit" class="modal-button confirm-button">Confirmar</button>
+                    <button class="modal-button cancel-button" onclick="closeDeleteModal()">Cancelar</button>
+                    <button class="modal-button confirm-button" onclick="deleteAccount()">Confirmar Exclusão</button>
                 </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="question-container">
-        <a href="duvidas.html" class="back-button">
-            <svg style="width:24px;height:24px;fill:#2e7d32;" viewBox="0 0 24 24">
-                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-            </svg>
-            Voltar para Perguntas
-        </a>
-
-        <div class="question-full">
-            <div class="metadata-bar">
-                <span class="subject-tag">Matemática</span>
-                <span class="question-meta">Perguntado há 2 horas</span>
-            </div>
-
-            <h1 class="question-title">Como resolver equações do segundo grau?</h1>
-            <h2 class="question-subtitle">Preciso de ajuda para entender o passo a passo da fórmula de Bhaskara...</h2>
-
-            <div class="question-description">
-                <p>Estou estudando equações do segundo grau e preciso entender melhor como aplicar a fórmula de
-                    Bhaskara.
-                    Especificamente, tenho dificuldade em:</p>
-
-                <ul>
-                    <li>Identificar os coeficientes a, b e c</li>
-                    <li>Entender quando usar o + ou - na fórmula</li>
-                    <li>Interpretar quando uma equação não tem solução real</li>
-                </ul>
-                <p>Por exemplo, na equação x² + 5x + 6 = 0, como proceder?</p>
             </div>
         </div>
 
-        <div class="answers-section">
-            <h3 style="margin-bottom: 1.5rem; color: #333;">2 Respostas</h3>
+        <!-- Edit Profile Modal -->
+        <div id="editProfileModal" class="modal">
+            <div class="modal-content" style="max-width: 400px;">
+                <h2>Editar Perfil</h2>
+                <form id="editProfileForm" class="new-question-form">
+                    <input type="text" placeholder="Nome" id="editName" required>
+                    <input type="tel" placeholder="Telefone" id="editPhone" required>
+                    <input type="email" placeholder="Email" id="editEmail" required>
+                    <input type="password" placeholder="Nova Senha (opcional)" id="editPassword">
+                    <button type="submit" class="submit-answer">Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
 
-            <!-- Best Answer -->
-            <div class="answer">
-                <div class="vote-section">
-                    <button class="upvote-button" onclick="upvote(this, 'answer1')">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
-                        </svg>
-                        <span class="tooltiptext">Obrigado! Me ajudou.</span>
-                        <span class="upvote-count">42</span>
-                    </button>
-                </div>
-                <div class="answer-content">
-                    <div class="answer-meta">
-                        Respondido há 1 hora
-                        <span class="best-answer-badge">Melhor resposta</span>
+        <!-- Password Confirmation Modal -->
+        <div id="passwordConfirmModal" class="modal">
+            <div class="modal-content" style="max-width: 400px;">
+                <h2>Confirmar Senha</h2>
+                <p>Por favor, insira sua senha atual para confirmar as alterações.</p>
+                <form id="passwordConfirmForm" class="new-question-form">
+                    <input type="password" placeholder="Senha atual" required>
+                    <div class="modal-buttons">
+                        <button type="button" class="modal-button cancel-button"
+                            onclick="closePasswordConfirmModal()">Cancelar</button>
+                        <button type="submit" class="modal-button confirm-button">Confirmar</button>
                     </div>
-                    <p>Para resolver equações do segundo grau usando Bhaskara, siga estes passos:</p>
-                    <ol style="margin: 1rem 0 1rem 1.5rem;">
-                        <li>Identifique os coeficientes: em x² + 5x + 6 = 0, temos a=1, b=5 e c=6</li>
-                        <li>Use a fórmula: x = [-b ± √(b² - 4ac)] / 2a</li>
-                        <li>Substitua os valores: x = [-5 ± √(25 - 24)] / 2</li>
-                        <li>Simplifique: x = [-5 ± √1] / 2</li>
-                        <li>Encontre as duas raízes: x = -2 ou x = -3</li>
-                    </ol>
-                    <p>O ± indica que você deve resolver duas vezes: uma com + e outra com -. Se b² - 4ac < 0, não há
-                            raízes reais.</p>
-                </div>
-            </div>
-
-            <!-- Regular Answer -->
-            <div class="answer">
-                <div class="vote-section">
-                    <button class="upvote-button" onclick="upvote(this, 'answer2')">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
-                        </svg>
-                        <span class="tooltiptext">Obrigado! Me ajudou.</span>
-                        <span class="upvote-count">7</span>
-                    </button>
-                </div>
-                <div class="answer-content">
-                    <div class="answer-meta">
-                        Respondido há 30 minutos
-                    </div>
-                    <p>Você só precisa multiplicar todos os números e dividir pelo primeiro número da equação. Por
-                        exemplo:</p>
-                    <p>Em x² + 5x + 6 = 0, multiplique 5 × 6 = 30, depois divida por 1.</p>
-                    <p>A resposta é x = 30.</p>
-                </div>
+                </form>
             </div>
         </div>
 
-        <div class="reply-section">
-            <button class="reply-button" onclick="toggleReplyEditor()">
-                Responder
-            </button>
+        <div class="question-container">
+            <a href="duvidas.html" class="back-button">
+                <svg style="width:24px;height:24px;fill:#2e7d32;" viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                </svg>
+                Voltar para Perguntas
+            </a>
 
-            <div id="replyEditor" style="display: none;">
-                <textarea id="replyText" placeholder="Digite sua resposta aqui..." rows="6"
-                    style="width: 100%; margin: 1rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; resize: vertical;"></textarea>
-                <div class="reply-buttons">
-                    <button class="clear-button" onclick="clearReply()">Limpar</button>
-                    <button class="submit-button" onclick="submitReply()">Enviar</button>
+            <div class="question-full">
+                <div class="metadata-bar">
+                    <span class="subject-tag">Matemática</span>
+                    <span class="question-meta">Perguntado há 2 horas</span>
+                </div>
+
+                <h1 class="question-title">Como resolver equações do segundo grau?</h1>
+                <h2 class="question-subtitle">Preciso de ajuda para entender o passo a passo da fórmula de Bhaskara...
+                </h2>
+
+                <div class="question-description">
+                    <p>Estou estudando equações do segundo grau e preciso entender melhor como aplicar a fórmula de
+                        Bhaskara.
+                        Especificamente, tenho dificuldade em:</p>
+
+                    <ul>
+                        <li>Identificar os coeficientes a, b e c</li>
+                        <li>Entender quando usar o + ou - na fórmula</li>
+                        <li>Interpretar quando uma equação não tem solução real</li>
+                    </ul>
+                    <p>Por exemplo, na equação x² + 5x + 6 = 0, como proceder?</p>
+                </div>
+            </div>
+
+            <div class="answers-section">
+                <h3 style="margin-bottom: 1.5rem; color: #333;">2 Respostas</h3>
+
+                <!-- Best Answer -->
+                <div class="answer">
+                    <div class="vote-section">
+                        <button class="upvote-button" onclick="upvote(this, 'answer1')">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
+                            </svg>
+                            <span class="tooltiptext">Obrigado! Me ajudou.</span>
+                            <span class="upvote-count">42</span>
+                        </button>
+                    </div>
+                    <div class="answer-content">
+                        <div class="answer-meta">
+                            Respondido há 1 hora
+                            <span class="best-answer-badge">Melhor resposta</span>
+                        </div>
+                        <p>Para resolver equações do segundo grau usando Bhaskara, siga estes passos:</p>
+                        <ol style="margin: 1rem 0 1rem 1.5rem;">
+                            <li>Identifique os coeficientes: em x² + 5x + 6 = 0, temos a=1, b=5 e c=6</li>
+                            <li>Use a fórmula: x = [-b ± √(b² - 4ac)] / 2a</li>
+                            <li>Substitua os valores: x = [-5 ± √(25 - 24)] / 2</li>
+                            <li>Simplifique: x = [-5 ± √1] / 2</li>
+                            <li>Encontre as duas raízes: x = -2 ou x = -3</li>
+                        </ol>
+                        <p>O ± indica que você deve resolver duas vezes: uma com + e outra com -. Se b² - 4ac < 0, não
+                                há raízes reais.</p>
+                    </div>
+                </div>
+
+                <!-- Regular Answer -->
+                <div class="answer">
+                    <div class="vote-section">
+                        <button class="upvote-button" onclick="upvote(this, 'answer2')">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
+                            </svg>
+                            <span class="tooltiptext">Obrigado! Me ajudou.</span>
+                            <span class="upvote-count">7</span>
+                        </button>
+                    </div>
+                    <div class="answer-content">
+                        <div class="answer-meta">
+                            Respondido há 30 minutos
+                        </div>
+                        <p>Você só precisa multiplicar todos os números e dividir pelo primeiro número da equação. Por
+                            exemplo:</p>
+                        <p>Em x² + 5x + 6 = 0, multiplique 5 × 6 = 30, depois divida por 1.</p>
+                        <p>A resposta é x = 30.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reply-section">
+                <button class="reply-button" onclick="toggleReplyEditor()">
+                    Responder
+                </button>
+
+                <div id="replyEditor" style="display: none;">
+                    <textarea id="replyText" placeholder="Digite sua resposta aqui..." rows="6"
+                        style="width: 100%; margin: 1rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; resize: vertical;"></textarea>
+                    <div class="reply-buttons">
+                        <button class="clear-button" onclick="clearReply()">Limpar</button>
+                        <button class="submit-button" onclick="submitReply()">Enviar</button>
+                    </div>
                 </div>
             </div>
         </div>
