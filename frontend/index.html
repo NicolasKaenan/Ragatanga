@@ -462,19 +462,6 @@
             }
         }
 
-        // Form submissions
-        document.getElementById('registerForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            // Handle register form submission here
-            closeModal('registerModal');
-        });
-
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            // Handle login form submission here
-            closeModal('loginModal');
-        });
-
         // CPF formatting
         document.getElementById('cpf').addEventListener('input', function (e) {
             let value = e.target.value.replace(/\D/g, '');
