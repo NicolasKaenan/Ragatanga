@@ -38,7 +38,7 @@ function verifyLogin( data ){
                 mensagemErro.style.display = "block"
             }
         }else if(status == 200 ) {
-            localStorage.setItem('id',data.id)
+            localStorage.setItem('user', data.token)
             window.location.href = "./../frontend/duvidas.html"
         }
     })
