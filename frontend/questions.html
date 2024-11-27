@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ColaBora - Perguntas</title>
-    <script src="./../backend/questionsAcad.js"></script>
     <style>
         * {
             margin: 0;
@@ -17,12 +16,12 @@
             background-color: #f5f5f5;
         }
 
-        .main {
+        .main{
             min-height: 57vh;
             width: 100%;
         }
 
-        .logo {
+        .logo{
             width: 12%;
         }
 
@@ -174,9 +173,6 @@
         .tab-navigation {
             display: flex;
             gap: 1rem;
-            text-decoration: none !important;
-            align-items: center;
-
         }
 
         .tab-button {
@@ -433,16 +429,7 @@
             /* Hidden by default */
         }
 
-        .markAsAnswered{
-            background: #2e7d32;
-            color: #e8f5e9;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.9rem;
-        }
-        
         /* Style for the mark as answered button */
-        
         .mark-answered {
             background-color: #2e7d32;
             color: white;
@@ -514,48 +501,6 @@
         .social-icon:hover {
             color: #d32f2f;
         }
-
-        .back-button {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #2e7d32;
-            text-decoration: none;
-            margin-bottom: 1rem;
-            font-weight: 500;
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .user-avatar {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background-color: #e0e0e0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .user-avatar svg {
-            width: 16px;
-            height: 16px;
-            fill: #666;
-        }
-
-        .user-name {
-            font-weight: 500;
-        }
     </style>
 </head>
 
@@ -624,22 +569,13 @@
             </div>
         </div>
 
-        <a href="pagInicial.html" class="back-button">
-            <svg style="width:24px;height:24px;fill:#2e7d32;" viewBox="0 0 24 24">
-                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-            </svg>
-            Voltar para a Página Inicial
-        </a>
-
         <div class="tabs">
             <div class="tab-buttons">
                 <div class="tab-navigation">
-
                     <button class="tab-button active" onclick="switchTab('general')">Perguntas Gerais</button>
                     <button class="tab-button" onclick="switchTab('my-questions')">Minhas Dúvidas</button>
                 </div>
-                <button class="add-question-button" onclick="showNewQuestionModal()"><ion-icon
-                        name="add-outline"></ion-icon></button>
+                <button class="add-question-button" onclick="showNewQuestionModal()"><ion-icon name="add-outline"></ion-icon></button>
             </div>
 
             <!-- Add this new modal -->
@@ -647,10 +583,10 @@
                 <div class="new-question-content">
                     <button class="modal-close" onclick="closeNewQuestionModal()">&times;</button>
                     <h2>Nova Dúvida</h2>
-                    <form id="formNewQuestion" class="new-question-form">
-                        <input name="title" type="text" placeholder="Título da dúvida" required>
-                        <input name="subtitle" type="text" placeholder="Subtítulo" required>
-                        <textarea name="question_description" placeholder="Descreva sua dúvida em detalhes..." rows="5" required></textarea>
+                    <form class="new-question-form" onsubmit="handleNewQuestion(event)">
+                        <input type="text" placeholder="Título da dúvida" required>
+                        <input type="text" placeholder="Subtítulo" required>
+                        <textarea placeholder="Descreva sua dúvida em detalhes..." rows="5" required></textarea>
 
                         <h4>Selecione a matéria:</h4>
                         <div class="subject-tags-container">
@@ -671,7 +607,6 @@
                 </div>
             </div>
 
-
             <div id="general" class="tab-content active">
                 <div class="question-card">
                     <div class="vote-section">
@@ -687,18 +622,9 @@
                         <div class="question-header">
                             <div>
                                 <span class="subject-tag">Matemática</span>
-                                <span class="markAsAnswered">Respondido</span>
+                                <span class="answered-badge">Respondido</span>
                             </div>
                             <span class="question-meta">Perguntado há 2 horas</span>
-                        </div>
-                        <div class="user-info">
-                            <div class="user-avatar">
-                                <svg viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                </svg>
-                            </div>
-                            <span class="user-name">João Silva</span>
                         </div>
                         <h3>Como resolver equações do segundo grau?</h3>
                         <p>Preciso de ajuda para entender o passo a passo da fórmula de Bhaskara...</p>
@@ -715,8 +641,7 @@
                                 <li>Interpretar quando uma equação não tem solução real</li>
                             </ul>
                             <p>Por exemplo, na equação x² + 5x + 6 = 0, como proceder?</p>
-                            <button class="submit-answer"
-                                onclick="window.location.href = 'respostaDuvidaAcademica.html'">Responder</button>
+                        <button class="submit-answer" onclick="window.location.href = 'RespostaDuvida.html'">Responder</button>
                         </div>
                     </div>
                 </div>
@@ -731,28 +656,13 @@
                         </button>
                         <span class="upvote-count">35</span>
                     </div>
-
-
-
                     <div class="question-content" onclick="toggleAnswer(this)">
                         <div class="question-header">
                             <span class="subject-tag">Física</span>
                             <span class="question-meta">Perguntado há 5 horas</span>
                         </div>
-
-                        <div class="user-info">
-                            <div class="user-avatar">
-                                <svg viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                </svg>
-                            </div>
-                            <span class="user-name">Pedro Henrique</span>
-                        </div>
-
                         <h3>Como calcular a velocidade média?</h3>
                         <p>Preciso entender como calcular a velocidade média de um objeto em movimento...</p>
-
 
                         <div class="answer-section">
                             <h4>Descrição da Dúvida:</h4>
@@ -764,7 +674,7 @@
                             </ul>
                             <p>Como considero estes fatores no cálculo? Preciso de uma explicação detalhada do conceito.
                             </p>
-                            <a class="submit-answer" href="respostaDuvidaAcademica.html">Responder</a>
+                            <a class="submit-answer" href="RespostaDuvida.html">Responder</a>
                         </div>
                     </div>
                 </div>
@@ -781,25 +691,11 @@
                         </button>
                         <span class="upvote-count">5</span>
                     </div>
-
-
-
                     <div class="question-content" onclick="toggleAnswer(this)">
                         <div class="question-header">
                             <span class="subject-tag">Química</span>
                             <span class="question-meta">Perguntado há 1 dia</span>
                         </div>
-
-                        <div class="user-info">
-                            <div class="user-avatar">
-                                <svg viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                </svg>
-                            </div>
-                            <span class="user-name">Victor França</span>
-                        </div>
-
                         <h3>Como balancear equações químicas?</h3>
                         <p>Estou com dificuldade em entender o processo de balanceamento...</p>
 
@@ -858,7 +754,7 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script>
 
-
+        
         function toggleUserMenu() {
             document.getElementById("userMenu").style.display =
                 document.getElementById("userMenu").style.display === "block" ? "none" : "block";
@@ -924,6 +820,14 @@
 
         function toggleSubject(element) {
             element.classList.toggle('selected');
+        }
+
+        function handleNewQuestion(event) {
+            event.preventDefault();
+            // Here you would typically handle the form submission
+            // For now, we'll just close the modal
+            closeNewQuestionModal();
+            alert('Dúvida publicada com sucesso!');
         }
 
         // Update user menu content click handler
