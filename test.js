@@ -5,7 +5,9 @@ const registerUser = async () => {
         email: "john@example.com", // Replace with the user's email
         user_type : 0,
         password: "mySecurePassword123", // Replace with the password to be hashed
-        cpf: "12345678901" // Replace with the user's CPF
+        cpf: "12345678901", // Replace with the user's CPF
+        phone_number : "47997147454"
+
     };
 
     try {
@@ -89,7 +91,9 @@ const getQuestions = async(token) =>{
 const postQuestion = async (token) => {
     const questionData = {
         title: "How do I implement JWT?", // Replace with the question title
-        question_description: "I am trying to implement JWT in my app, can someone help?" // Replace with the question description
+        subtitle : "HAHAHAHAHAHAHHA",
+        question_description: "I am trying to implement JWT in my app, can someone help?", // Replace with the question description
+        subjects : ["história","português"]
     };
 
     try {
@@ -188,11 +192,34 @@ const upvoteAnswer = async (token) => {
     }
 };
 
+const myQuestions = async (token) => {
+    try {
+        const response = await fetch('http://localhost:3000/myQuestions',  {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', // Sending JSON data
+                Authorization: `Bearer ${token}` // Include the JWT token in the Authorization header
+            },
+            body: null, // Convert JavaScript object to JSON string
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            console.log(result);
+        } else {
+            console.error('Get questions Error:', result.error);
+        }
+    } catch (error) {
+        console.error('Network Error:', error);
+    }
+};
+
 
 // Register a user, log them in, and post a question
 const main = async () => {
     // Uncomment the line below to register a new user (optional)
-    await registerUser();
+    //await registerUser();
 
     // Log in the user and get the JWT token
     const token = await loginUser();
@@ -203,6 +230,7 @@ const main = async () => {
         //await answerQuestion(token);
         //voteRelevance(token);
         //upvoteAnswer(token);
+        myQuestions(token);
     }
 };
 
