@@ -1,24 +1,26 @@
-const URL_REGISTER = "http://localhost:3000/auth/register/";
+const URL_REGISTER = "http://localhost:3000/register/";
 
 document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById('formulario')
+    const form = document.getElementById('registerForm')
     form.addEventListener('submit', function(event) {
         event.preventDefault(); 
 
         const formData = new FormData(form);
         const data = {
-            "nome": formData.get('name'),
-            "email": formData.get('email'),
-            "password":formData.get('password'),
-            "cpf":formData.get('cpf'),
-            "type":formData.get('type')
+            "user_name": formData.get('nameRegister'),
+            "email": formData.get('emailRegister'),
+            "phone_number": formData.get('telRegister'),
+            "password":formData.get('passwordRegister'),
+            "cpf":formData.get('cpfRegister'),
+            "user_type":formData.get('user_type')
         }
 
-        enviaPOST( data )
+        saveRegister( data )
     })
 })
 
 function saveRegister( data ){
+    console.log(data)
     var header = {
         method:"POST",
         headers:{"Content-Type":"application/json"},

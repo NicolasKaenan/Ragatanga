@@ -1,14 +1,14 @@
-const URL_LOGIN = "http://localhost:3000/auth/login/"
+const URL_LOGIN = "http://localhost:3000/login/"
 
 document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById('formulario')
+    const form = document.getElementById('loginForm')
     form.addEventListener('submit', function(event) {
         event.preventDefault();
 
         const formData = new FormData(form);
         const data = {
-            "email": formData.get('email'),
-            "password":formData.get('password')
+            "email": formData.get('loginEmail'),
+            "password":formData.get('loginPassword')
         }
 
         console.log(data)
@@ -39,7 +39,7 @@ function verifyLogin( data ){
             }
         }else if(status == 200 ) {
             localStorage.setItem('id',data.id)
-            window.location.href = "index.html"
+            window.location.href = "./../frontend/duvidas.html"
         }
     })
     .catch(function(error){

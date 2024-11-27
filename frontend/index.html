@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ColaBora - Sua Plataforma de Dúvidas e Respostas</title>
+    <script src="/backend/login.js"></script>
+    <script src="/backend/register.js"></script>
     <style>
         * {
             margin: 0;
@@ -331,34 +333,34 @@
                     <div class="form-column">
                         <div class="form-group">
                             <label for="name">Nome Completo</label>
-                            <input type="text" id="name" required>
+                            <input type="text" id="name" name="nameRegister" required>
                         </div>
                         <div class="form-group">
                             <label for="phone">Telefone</label>
-                            <input type="tel" id="phone" required>
+                            <input type="tel" id="phone" name="telRegister" required>
                         </div>
                         <div class="form-group">
                             <label for="cpf">CPF</label>
-                            <input type="text" id="cpf" required>
+                            <input type="text" id="cpf" name="cpfRegister" required>
                         </div>
                     </div>
                     <!-- Right Column -->
                     <div class="form-column">
                         <div class="form-group">
                             <label for="userType">Tipo de Usuário</label>
-                            <select id="userType" required>
+                            <select id="userType" name="user_type"  required>
                                 <option value="">Selecione...</option>
-                                <option value="professor">Professor</option>
-                                <option value="estudante">Estudante</option>
+                                <option value="1">Professor</option>
+                                <option value="0">Estudante</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" required>
+                            <input type="email" id="email" name="emailRegister" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Senha</label>
-                            <input type="password" id="password" required>
+                            <input type="password" id="password" name="passwordRegister"  required>
                         </div>
                     </div>
                     <div class="submit-container">
@@ -380,11 +382,11 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" required>
+                    <input type="email" id="loginEmail" name="loginEmail" required>
                 </div>
                 <div class="form-group">
                     <label for="loginPassword">Senha</label>
-                    <input type="password" id="loginPassword" required>
+                    <input type="password" id="loginPassword" name="loginPassword" required>
                 </div>
                 <button type="submit" class="submit-btn">Entrar</button>
             </form>
