@@ -1,0 +1,954 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColaBora - Perguntas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .main {
+            min-height: 57vh;
+            width: 100%;
+        }
+
+        .logo {
+            width: 12%;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-menu {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .user-button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            /* Make button take full width */
+        }
+
+        .user-menu-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            z-index: 1000;
+        }
+
+        .user-menu-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .user-menu-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .delete-account {
+            color: #dc3545 !important;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .modal-button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .confirm-button {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .cancel-button {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .answer-section {
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-top: 1rem;
+            display: none;
+            text-decoration: none;
+            /* Hide by default */
+        }
+
+        .answer-section h4 {
+            color: #2e7d32;
+            margin-bottom: 1rem;
+        }
+
+        .answer-section ul {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        .answer-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .answer-section p {
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .tabs {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .tab-navigation {
+            display: flex;
+            gap: 1rem;
+            text-decoration: none !important;
+            align-items: center;
+
+        }
+
+        .tab-button {
+            padding: 1rem 2rem;
+            background: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #2e7d32;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-button.active {
+            background: #2e7d32;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .vote-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+            justify-content: center;
+            margin-top: 0;
+            min-width: 60px;
+        }
+
+        .upvote-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .upvote-button svg {
+            width: 24px;
+            height: 24px;
+            fill: #666;
+            transition: fill 0.3s ease;
+        }
+
+        .upvote-button:hover svg {
+            fill: #2e7d32;
+        }
+
+        .upvote-count {
+            font-weight: bold;
+            color: #2e7d32;
+            margin: 0.5rem 0;
+        }
+
+        .question-content {
+            flex: 1;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .question-meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .subject-tag {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #2e7d32;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 6px 12px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            white-space: pre-line;
+            line-height: 1.4;
+            font-size: 0.9rem;
+        }
+
+        .upvote-button:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .upvote-button.voted {
+            cursor: default;
+        }
+
+        .upvote-button.voted svg {
+            fill: #2e7d32;
+        }
+
+        .submit-answer {
+            background-color: #2e7d32;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-answer:hover {
+            background-color: #1b5e20;
+        }
+
+        .add-question-button {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+            padding: 1;
+            line-height: 0;
+            /* Change from 1 to 0 for better centering */
+        }
+
+        /* New Question Modal Styles */
+        .new-question-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+        }
+
+        .new-question-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .new-question-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .new-question-form input,
+        .new-question-form textarea {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .subject-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .subject-tag-option {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .subject-tag-option.selected {
+            border-color: #2e7d32;
+            background: #2e7d32;
+            color: white;
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Add styles for the answered badge */
+        .answered-badge {
+            background-color: #4CAF50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+            display: none;
+            /* Hidden by default */
+        }
+
+        /* Style for the mark as answered button */
+        .mark-answered {
+            background-color: #2e7d32;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .mark-answered:hover {
+            background-color: #1b5e20;
+        }
+
+        .mark-answered.disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        /* Add styles for the see answers button */
+        .see-answers {
+            background-color: #2e7d32;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            margin-right: 1rem;
+            /* Add spacing between buttons */
+            transition: background-color 0.3s ease;
+        }
+
+        .see-answers:hover {
+            background-color: #1b5e20;
+        }
+
+        /* Add styles for the button container */
+        .button-container {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer {
+            background: #1b5e20;
+            color: white;
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+            min-height: 5vh;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-icon:hover {
+            color: #d32f2f;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2e7d32;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo-container">
+            <img src="logoColabora.png" class="logo">
+            <h1>ColaBora</h1>
+        </div>
+        <!-- User menu button and content -->
+        <div class="user-menu">
+            <button class="user-button" onclick="toggleUserMenu()">
+                <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24">
+                    <path
+                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+            </button>
+            <div class="user-menu-content" id="userMenu">
+                <a href="javascript:void(0)">Editar Perfil</a>
+                <a href="javascript:void(0)">Logout</a>
+                <a href="javascript:void(0)" class="delete-account" onclick="showDeleteConfirmation()">Excluir
+                    Conta</a>
+            </div>
+        </div>
+    </header>
+    <div class="main">
+        <!-- Delete confirmation modal -->
+        <div id="deleteModal" class="modal">
+            <div class="modal-content">
+                <h2>Confirmar Exclusão</h2>
+                <p>Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.</p>
+                <div class="modal-buttons">
+                    <button class="modal-button cancel-button" onclick="closeDeleteModal()">Cancelar</button>
+                    <button class="modal-button confirm-button" onclick="deleteAccount()">Confirmar Exclusão</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Profile Modal -->
+        <div id="editProfileModal" class="modal">
+            <div class="modal-content" style="max-width: 400px;">
+                <h2>Editar Perfil</h2>
+                <form id="editProfileForm" class="new-question-form">
+                    <input type="text" placeholder="Nome" id="editName" required>
+                    <input type="tel" placeholder="Telefone" id="editPhone" required>
+                    <input type="email" placeholder="Email" id="editEmail" required>
+                    <input type="password" placeholder="Nova Senha (opcional)" id="editPassword">
+                    <button type="submit" class="submit-answer">Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Password Confirmation Modal -->
+        <div id="passwordConfirmModal" class="modal">
+            <div class="modal-content" style="max-width: 400px;">
+                <h2>Confirmar Senha</h2>
+                <p>Por favor, insira sua senha atual para confirmar as alterações.</p>
+                <form id="passwordConfirmForm" class="new-question-form">
+                    <input type="password" placeholder="Senha atual" required>
+                    <div class="modal-buttons">
+                        <button type="button" class="modal-button cancel-button"
+                            onclick="closePasswordConfirmModal()">Cancelar</button>
+                        <button type="submit" class="modal-button confirm-button">Confirmar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <a href="pagInicial.html" class="back-button">
+            <svg style="width:24px;height:24px;fill:#2e7d32;" viewBox="0 0 24 24">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+            </svg>
+            Voltar para a Página Inicial
+        </a>
+
+        <div class="tabs">
+            <div class="tab-buttons">
+                <div class="tab-navigation">
+
+                    <button class="tab-button active" onclick="switchTab('general')">Perguntas Gerais</button>
+                    <button class="tab-button" onclick="switchTab('my-questions')">Minhas Dúvidas</button>
+                </div>
+                <button class="add-question-button" onclick="showNewQuestionModal()"><ion-icon
+                        name="add-outline"></ion-icon></button>
+            </div>
+
+            <!-- Add this new modal -->
+            <div id="newQuestionModal" class="new-question-modal">
+                <div class="new-question-content">
+                    <button class="modal-close" onclick="closeNewQuestionModal()">&times;</button>
+                    <h2>Nova Dúvida</h2>
+                    <form class="new-question-form" onsubmit="handleNewQuestion(event)">
+                        <input type="text" placeholder="Título da dúvida" required>
+                        <input type="text" placeholder="Subtítulo" required>
+                        <textarea placeholder="Descreva sua dúvida em detalhes..." rows="5" required></textarea>
+
+                        <h4>Selecione a matéria:</h4>
+                        <div class="subject-tags-container">
+                            <span class="subject-tag-option" onclick="toggleSubject(this)">Matemática</span>
+                            <span class="subject-tag-option" onclick="toggleSubject(this)">Português</span>
+                            <span class="subject-tag-option" onclick="toggleSubject(this)">História</span>
+                            <span class="subject-tag-option" onclick="toggleSubject(this)">Geografia</span>
+                            <span class="subject-tag-option" onclick="toggleSubject(this)">Física</span>
+                            <span class="subject-tag-option" onclick="toggleSubject(this)">Química</span>
+                            <span class="subject-tag-option" onclick="toggleSubject(this)">Biologia</span>
+                            <span class="subject-tag-option" onclick="toggleSubject(this)">Literatura</span>
+                            <span class="subject-tag-option" onclick="toggleSubject(this)">Filosofia</span>
+                            <span class="subject-tag-option" onclick="toggleSubject(this)">Sociologia</span>
+                        </div>
+
+                        <button type="submit" class="submit-answer">Publicar Dúvida</button>
+                    </form>
+                </div>
+            </div>
+
+
+            <div id="general" class="tab-content active">
+                <div class="question-card">
+                    <div class="vote-section">
+                        <button class="upvote-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
+                            </svg>
+                            <span class="tooltiptext">Tenho essa mesma dúvida</span>
+                        </button>
+                        <span class="upvote-count">42</span>
+                    </div>
+                    <div class="question-content" onclick="toggleAnswer(this)">
+                        <div class="question-header">
+                            <div>
+                                <span class="subject-tag">Matemática</span>
+                                <span class="answered-badge">Respondido</span>
+                            </div>
+                            <span class="question-meta">Perguntado há 2 horas</span>
+                        </div>
+                        <h3>Como resolver equações do segundo grau?</h3>
+                        <p>Preciso de ajuda para entender o passo a passo da fórmula de Bhaskara...</p>
+
+                        <div class="answer-section">
+                            <h4>Descrição da Dúvida:</h4>
+                            <p>Estou estudando equações do segundo grau e preciso entender melhor como aplicar a fórmula
+                                de
+                                Bhaskara.
+                                Especificamente, tenho dificuldade em:</p>
+                            <ul>
+                                <li>Identificar os coeficientes a, b e c</li>
+                                <li>Entender quando usar o + ou - na fórmula</li>
+                                <li>Interpretar quando uma equação não tem solução real</li>
+                            </ul>
+                            <p>Por exemplo, na equação x² + 5x + 6 = 0, como proceder?</p>
+                            <button class="submit-answer"
+                                onclick="window.location.href = 'respostaDuvidaAcademica.html'">Responder</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="vote-section">
+                        <button class="upvote-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
+                            </svg>
+                            <span class="tooltiptext">Tenho essa mesma dúvida</span>
+                        </button>
+                        <span class="upvote-count">35</span>
+                    </div>
+                    <div class="question-content" onclick="toggleAnswer(this)">
+                        <div class="question-header">
+                            <span class="subject-tag">Física</span>
+                            <span class="question-meta">Perguntado há 5 horas</span>
+                        </div>
+                        <h3>Como calcular a velocidade média?</h3>
+                        <p>Preciso entender como calcular a velocidade média de um objeto em movimento...</p>
+
+                        <div class="answer-section">
+                            <h4>Descrição da Dúvida:</h4>
+                            <p>Na minha aula de física, preciso calcular a velocidade média de um carro que:</p>
+                            <ul>
+                                <li>Percorreu 150 km em 2 horas</li>
+                                <li>Fez paradas durante o percurso</li>
+                                <li>Variou sua velocidade constantemente</li>
+                            </ul>
+                            <p>Como considero estes fatores no cálculo? Preciso de uma explicação detalhada do conceito.
+                            </p>
+                            <a class="submit-answer" href="respostaDuvidaAcademica.html">Responder</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="my-questions" class="tab-content">
+                <div class="question-card">
+                    <div class="vote-section">
+                        <button class="upvote-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
+                            </svg>
+                            <span class="tooltiptext">Tenho essa mesma dúvida</span>
+                        </button>
+                        <span class="upvote-count">5</span>
+                    </div>
+                    <div class="question-content" onclick="toggleAnswer(this)">
+                        <div class="question-header">
+                            <span class="subject-tag">Química</span>
+                            <span class="question-meta">Perguntado há 1 dia</span>
+                        </div>
+                        <h3>Como balancear equações químicas?</h3>
+                        <p>Estou com dificuldade em entender o processo de balanceamento...</p>
+
+                        <div class="answer-section">
+                            <h4>Descrição da Dúvida:</h4>
+                            <p>Estou com dificuldade para balancear a seguinte reação química:</p>
+                            <p>FeS + O₂ → Fe₂O₃ + SO₂</p>
+                            <p>Preciso entender:</p>
+                            <ul>
+                                <li>Como identificar os elementos que precisam ser balanceados</li>
+                                <li>A ordem correta para fazer o balanceamento</li>
+                                <li>Como verificar se a equação está corretamente balanceada</li>
+                            </ul>
+                            <div class="button-container">
+                                <button class="see-answers" onclick="viewAnswers(this)">Ver Respostas</button>
+                                <button class="mark-answered" onclick="markAsAnswered(this)">Marcar como
+                                    respondido</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <h3>Conecte-se conosco</h3>
+        <div class="social-links">
+            <a href="https://facebook.com/brainquest" class="social-icon" title="Facebook">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z" />
+                </svg>
+            </a>
+            <a href="https://twitter.com/brainquest" class="social-icon" title="Twitter">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M23.44 4.83c-.8.37-1.5.38-2.22.02.93-.56.98-.96 1.32-2.02-.88.52-1.86.9-2.9 1.1-.82-.88-2-1.43-3.3-1.43-2.5 0-4.55 2.04-4.55 4.54 0 .36.03.7.1 1.04-3.77-.2-7.12-2-9.36-4.75-.4.67-.6 1.45-.6 2.3 0 1.56.8 2.95 2 3.77-.74-.03-1.44-.23-2.05-.57v.06c0 2.2 1.56 4.03 3.64 4.44-.67.2-1.37.2-2.06.08.58 1.8 2.26 3.12 4.25 3.16C5.78 18.1 3.37 18.74 1 18.46c2 1.3 4.4 2.04 6.97 2.04 8.35 0 12.92-6.92 12.92-12.93 0-.2 0-.4-.02-.6.9-.63 1.96-1.22 2.56-2.14z" />
+                </svg>
+            </a>
+            <a href="https://instagram.com/brainquest" class="social-icon" title="Instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+            </a>
+            <a href="https://linkedin.com/company/brainquest" class="social-icon" title="LinkedIn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
+                </svg>
+            </a>
+        </div>
+        <p style="margin-top: 1rem;">© 2024 ColaBora. Todos os direitos reservados.</p>
+    </footer>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+
+
+        function toggleUserMenu() {
+            document.getElementById("userMenu").style.display =
+                document.getElementById("userMenu").style.display === "block" ? "none" : "block";
+        }
+
+        function showDeleteConfirmation() {
+            document.getElementById("deleteModal").style.display = "block";
+        }
+
+        function closeDeleteModal() {
+            document.getElementById("deleteModal").style.display = "none";
+        }
+
+        function deleteAccount() {
+            alert("Conta excluída com sucesso!");
+            closeDeleteModal();
+        }
+
+        function toggleAnswer(element) {
+            const answerSection = element.querySelector('.answer-section');
+            if (answerSection.style.display === 'block') {
+                return; // Do nothing if already showing (prevents hiding)
+            }
+            answerSection.style.display = 'block';
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showNewQuestionModal() {
+            document.getElementById('newQuestionModal').style.display = 'block';
+        }
+
+        function closeNewQuestionModal() {
+            document.getElementById('newQuestionModal').style.display = 'none';
+        }
+
+        function showEditProfileModal() {
+            document.getElementById("editProfileModal").style.display = "block";
+        }
+
+        function closeEditProfileModal() {
+            document.getElementById("editProfileModal").style.display = "none";
+        }
+
+        function showPasswordConfirmModal() {
+            document.getElementById("passwordConfirmModal").style.display = "block";
+        }
+
+        function closePasswordConfirmModal() {
+            document.getElementById("passwordConfirmModal").style.display = "none";
+        }
+
+        function toggleSubject(element) {
+            element.classList.toggle('selected');
+        }
+
+        function handleNewQuestion(event) {
+            event.preventDefault();
+            // Here you would typically handle the form submission
+            // For now, we'll just close the modal
+            closeNewQuestionModal();
+            alert('Dúvida publicada com sucesso!');
+        }
+
+        // Update user menu content click handler
+        document.getElementById("userMenu").querySelector("a").onclick = function (e) {
+            e.preventDefault();
+            showEditProfileModal();
+            document.getElementById("userMenu").style.display = "none";
+        };
+
+        // Add form submission handlers
+        document.getElementById("editProfileForm").onsubmit = function (e) {
+            e.preventDefault();
+            closeEditProfileModal();
+            showPasswordConfirmModal();
+        };
+
+        document.getElementById("passwordConfirmForm").onsubmit = function (e) {
+            e.preventDefault();
+            closePasswordConfirmModal();
+            alert("Perfil atualizado com sucesso!");
+        };
+
+        window.onclick = function (event) {
+            const modals = [
+                'newQuestionModal',
+                'deleteModal',
+                'editProfileModal',
+                'passwordConfirmModal'
+            ];
+
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            });
+
+            if (!event.target.closest('.user-menu')) {
+                const userMenu = document.getElementById("userMenu");
+                if (userMenu.style.display === "block") {
+                    userMenu.style.display = "none";
+                }
+            }
+        }
+
+        document.querySelectorAll('.upvote-button').forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.stopPropagation();
+
+                // Check if button was already clicked
+                if (this.classList.contains('voted')) {
+                    return; // Do nothing if already voted
+                }
+
+                const countElement = this.parentElement.querySelector('.upvote-count');
+                let count = parseInt(countElement.textContent);
+                countElement.textContent = count + 1;
+                this.querySelector('svg').style.fill = '#2e7d32';
+
+                // Add class to mark as voted
+                this.classList.add('voted');
+                this.style.pointerEvents = 'none'; // Disable further clicks
+            });
+        });
+
+        // Add this function to handle marking questions as answered
+        function markAsAnswered(button) {
+            // Disable the button
+            button.classList.add('disabled');
+            button.disabled = true;
+            button.textContent = 'Marcado como respondido';
+
+            // Show the answered badge
+            const questionCard = button.closest('.question-content');
+            const questionHeader = questionCard.querySelector('.question-header');
+
+            // Check if badge already exists
+            let answeredBadge = questionHeader.querySelector('.answered-badge');
+            if (!answeredBadge) {
+                answeredBadge = document.createElement('span');
+                answeredBadge.className = 'answered-badge';
+                answeredBadge.textContent = 'Respondido';
+                questionHeader.firstElementChild.appendChild(answeredBadge);
+            }
+            answeredBadge.style.display = 'inline-block';
+        }
+
+        // Add this function to handle viewing answers
+        function viewAnswers(button) {
+            // Here you would typically load and display the answers
+            // For now, we'll just show an alert
+            alert('Carregando respostas...');
+        }
+    </script>
+</body>
+
+</html>

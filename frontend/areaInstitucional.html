@@ -16,12 +16,12 @@
             background-color: #f5f5f5;
         }
 
-        .main{
+        .main {
             min-height: 57vh;
             width: 100%;
         }
 
-        .logo{
+        .logo {
             width: 12%;
         }
 
@@ -173,6 +173,9 @@
         .tab-navigation {
             display: flex;
             gap: 1rem;
+            text-decoration: none !important;
+            align-items: center;
+
         }
 
         .tab-button {
@@ -501,6 +504,19 @@
         .social-icon:hover {
             color: #d32f2f;
         }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2e7d32;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
     </style>
 </head>
 
@@ -569,13 +585,22 @@
             </div>
         </div>
 
+        <a href="pagInicial.html" class="back-button">
+            <svg style="width:24px;height:24px;fill:#2e7d32;" viewBox="0 0 24 24">
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+            </svg>
+            Voltar para a Página Inicial
+        </a>
+
         <div class="tabs">
             <div class="tab-buttons">
                 <div class="tab-navigation">
+
                     <button class="tab-button active" onclick="switchTab('general')">Perguntas Gerais</button>
                     <button class="tab-button" onclick="switchTab('my-questions')">Minhas Dúvidas</button>
                 </div>
-                <button class="add-question-button" onclick="showNewQuestionModal()"><ion-icon name="add-outline"></ion-icon></button>
+                <button class="add-question-button" onclick="showNewQuestionModal()"><ion-icon
+                        name="add-outline"></ion-icon></button>
             </div>
 
             <!-- Add this new modal -->
@@ -588,24 +613,11 @@
                         <input type="text" placeholder="Subtítulo" required>
                         <textarea placeholder="Descreva sua dúvida em detalhes..." rows="5" required></textarea>
 
-                        <h4>Selecione a matéria:</h4>
-                        <div class="subject-tags-container">
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Matemática</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Português</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">História</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Geografia</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Física</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Química</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Biologia</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Literatura</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Filosofia</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Sociologia</span>
-                        </div>
-
                         <button type="submit" class="submit-answer">Publicar Dúvida</button>
                     </form>
                 </div>
             </div>
+
 
             <div id="general" class="tab-content active">
                 <div class="question-card">
@@ -641,7 +653,8 @@
                                 <li>Interpretar quando uma equação não tem solução real</li>
                             </ul>
                             <p>Por exemplo, na equação x² + 5x + 6 = 0, como proceder?</p>
-                        <button class="submit-answer" onclick="window.location.href = 'RespostaDuvida.html'">Responder</button>
+                            <button class="submit-answer"
+                                onclick="window.location.href = 'RespostaDuvida.html'">Responder</button>
                         </div>
                     </div>
                 </div>
@@ -754,7 +767,7 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script>
 
-        
+
         function toggleUserMenu() {
             document.getElementById("userMenu").style.display =
                 document.getElementById("userMenu").style.display === "block" ? "none" : "block";
