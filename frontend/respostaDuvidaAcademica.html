@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ColaBora - Perguntas</title>
+    <title>ColaBora - Dúvida</title>
     <style>
+        /* Keep all existing styles from the previous page */
         * {
             margin: 0;
             padding: 0;
@@ -16,11 +17,6 @@
             background-color: #f5f5f5;
         }
 
-        .main {
-            min-height: 57vh;
-            width: 100%;
-        }
-
         .logo {
             width: 12%;
         }
@@ -29,6 +25,11 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+        }
+
+        .main{
+            min-height: 57vh;
+            width: 100%;
         }
 
         .header {
@@ -135,7 +136,6 @@
             border-radius: 4px;
             margin-top: 1rem;
             display: none;
-            text-decoration: none;
             /* Hide by default */
         }
 
@@ -173,9 +173,6 @@
         .tab-navigation {
             display: flex;
             gap: 1rem;
-            text-decoration: none !important;
-            align-items: center;
-
         }
 
         .tab-button {
@@ -346,7 +343,7 @@
             align-items: center;
             justify-content: center;
             transition: background-color 0.3s ease;
-            padding: 1;
+            padding: 0;
             line-height: 0;
             /* Change from 1 to 0 for better centering */
         }
@@ -479,6 +476,163 @@
             gap: 1rem;
         }
 
+        .question-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2e7d32;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .question-full {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .question-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .metadata-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+        }
+
+        .question-description {
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .question-description ul {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        .question-description li {
+            margin-bottom: 0.8rem;
+        }
+
+        .example-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        /* Add styles for answers section */
+        .answers-section {
+            margin-top: 2rem;
+        }
+
+        .answer {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .answer-content {
+            flex: 1;
+        }
+
+        .answer-meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .best-answer-badge {
+            background-color: #2e7d32;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            margin-left: 8px;
+            display: inline-block;
+        }
+
+        .reply-section {
+            margin-top: 2rem;
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .reply-button {
+            background-color: #2e7d32;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .reply-button:hover {
+            background-color: #1b5e20;
+        }
+
+        .reply-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .clear-button {
+            background-color: #6c757d;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button {
+            background-color: #2e7d32;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .clear-button:hover {
+            background-color: #5a6268;
+        }
+
+        .submit-button:hover {
+            background-color: #1b5e20;
+        }
+
         .footer {
             background: #1b5e20;
             color: white;
@@ -504,19 +658,6 @@
         .social-icon:hover {
             color: #d32f2f;
         }
-
-        .back-button {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #2e7d32;
-            text-decoration: none;
-            margin-bottom: 1rem;
-            font-weight: 500;
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
     </style>
 </head>
 
@@ -526,7 +667,6 @@
             <img src="logoColabora.png" class="logo">
             <h1>ColaBora</h1>
         </div>
-        <!-- User menu button and content -->
         <div class="user-menu">
             <button class="user-button" onclick="toggleUserMenu()">
                 <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24">
@@ -537,13 +677,12 @@
             <div class="user-menu-content" id="userMenu">
                 <a href="javascript:void(0)">Editar Perfil</a>
                 <a href="javascript:void(0)">Logout</a>
-                <a href="javascript:void(0)" class="delete-account" onclick="showDeleteConfirmation()">Excluir
-                    Conta</a>
+                <a href="javascript:void(0)" class="delete-account" onclick="showDeleteConfirmation()">Excluir Conta</a>
             </div>
         </div>
     </header>
+
     <div class="main">
-        <!-- Delete confirmation modal -->
         <div id="deleteModal" class="modal">
             <div class="modal-content">
                 <h2>Confirmar Exclusão</h2>
@@ -585,168 +724,110 @@
             </div>
         </div>
 
-        <a href="pagInicial.html" class="back-button">
-            <svg style="width:24px;height:24px;fill:#2e7d32;" viewBox="0 0 24 24">
-                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-            </svg>
-            Voltar para a Página Inicial
-        </a>
+        <div class="question-container">
+            <a href="areaAcademica.html" class="back-button">
+                <svg style="width:24px;height:24px;fill:#2e7d32;" viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                </svg>
+                Voltar para Perguntas
+            </a>
 
-        <div class="tabs">
-            <div class="tab-buttons">
-                <div class="tab-navigation">
-
-                    <button class="tab-button active" onclick="switchTab('general')">Perguntas Gerais</button>
-                    <button class="tab-button" onclick="switchTab('my-questions')">Minhas Dúvidas</button>
+            <div class="question-full">
+                <div class="metadata-bar">
+                    <span class="subject-tag">Matemática</span>
+                    <span class="question-meta">Perguntado há 2 horas</span>
                 </div>
-                <button class="add-question-button" onclick="showNewQuestionModal()"><ion-icon
-                        name="add-outline"></ion-icon></button>
-            </div>
 
-            <!-- Add this new modal -->
-            <div id="newQuestionModal" class="new-question-modal">
-                <div class="new-question-content">
-                    <button class="modal-close" onclick="closeNewQuestionModal()">&times;</button>
-                    <h2>Nova Dúvida</h2>
-                    <form class="new-question-form" onsubmit="handleNewQuestion(event)">
-                        <input type="text" placeholder="Título da dúvida" required>
-                        <input type="text" placeholder="Subtítulo" required>
-                        <textarea placeholder="Descreva sua dúvida em detalhes..." rows="5" required></textarea>
+                <h1 class="question-title">Como resolver equações do segundo grau?</h1>
+                <h2 class="question-subtitle">Preciso de ajuda para entender o passo a passo da fórmula de Bhaskara...
+                </h2>
 
-                        <h4>Selecione a matéria:</h4>
-                        <div class="subject-tags-container">
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Matemática</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Português</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">História</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Geografia</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Física</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Química</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Biologia</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Literatura</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Filosofia</span>
-                            <span class="subject-tag-option" onclick="toggleSubject(this)">Sociologia</span>
-                        </div>
+                <div class="question-description">
+                    <p>Estou estudando equações do segundo grau e preciso entender melhor como aplicar a fórmula de
+                        Bhaskara.
+                        Especificamente, tenho dificuldade em:</p>
 
-                        <button type="submit" class="submit-answer">Publicar Dúvida</button>
-                    </form>
+                    <ul>
+                        <li>Identificar os coeficientes a, b e c</li>
+                        <li>Entender quando usar o + ou - na fórmula</li>
+                        <li>Interpretar quando uma equação não tem solução real</li>
+                    </ul>
+                    <p>Por exemplo, na equação x² + 5x + 6 = 0, como proceder?</p>
                 </div>
             </div>
 
+            <div class="answers-section">
+                <h3 style="margin-bottom: 1.5rem; color: #333;">2 Respostas</h3>
 
-            <div id="general" class="tab-content active">
-                <div class="question-card">
+                <!-- Best Answer -->
+                <div class="answer">
                     <div class="vote-section">
-                        <button class="upvote-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <button class="upvote-button" onclick="upvote(this, 'answer1')">
+                            <svg viewBox="0 0 24 24">
                                 <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
                             </svg>
-                            <span class="tooltiptext">Tenho essa mesma dúvida</span>
+                            <span class="tooltiptext">Obrigado! Me ajudou.</span>
+                            <span class="upvote-count">42</span>
                         </button>
-                        <span class="upvote-count">42</span>
                     </div>
-                    <div class="question-content" onclick="toggleAnswer(this)">
-                        <div class="question-header">
-                            <div>
-                                <span class="subject-tag">Matemática</span>
-                                <span class="answered-badge">Respondido</span>
-                            </div>
-                            <span class="question-meta">Perguntado há 2 horas</span>
+                    <div class="answer-content">
+                        <div class="answer-meta">
+                            Respondido há 1 hora
+                            <span class="best-answer-badge">Melhor resposta</span>
                         </div>
-                        <h3>Como resolver equações do segundo grau?</h3>
-                        <p>Preciso de ajuda para entender o passo a passo da fórmula de Bhaskara...</p>
-
-                        <div class="answer-section">
-                            <h4>Descrição da Dúvida:</h4>
-                            <p>Estou estudando equações do segundo grau e preciso entender melhor como aplicar a fórmula
-                                de
-                                Bhaskara.
-                                Especificamente, tenho dificuldade em:</p>
-                            <ul>
-                                <li>Identificar os coeficientes a, b e c</li>
-                                <li>Entender quando usar o + ou - na fórmula</li>
-                                <li>Interpretar quando uma equação não tem solução real</li>
-                            </ul>
-                            <p>Por exemplo, na equação x² + 5x + 6 = 0, como proceder?</p>
-                            <button class="submit-answer"
-                                onclick="window.location.href = 'respostaDuvidaAcademica.html'">Responder</button>
-                        </div>
+                        <p>Para resolver equações do segundo grau usando Bhaskara, siga estes passos:</p>
+                        <ol style="margin: 1rem 0 1rem 1.5rem;">
+                            <li>Identifique os coeficientes: em x² + 5x + 6 = 0, temos a=1, b=5 e c=6</li>
+                            <li>Use a fórmula: x = [-b ± √(b² - 4ac)] / 2a</li>
+                            <li>Substitua os valores: x = [-5 ± √(25 - 24)] / 2</li>
+                            <li>Simplifique: x = [-5 ± √1] / 2</li>
+                            <li>Encontre as duas raízes: x = -2 ou x = -3</li>
+                        </ol>
+                        <p>O ± indica que você deve resolver duas vezes: uma com + e outra com -. Se b² - 4ac < 0, não
+                                há raízes reais.</p>
                     </div>
                 </div>
 
-                <div class="question-card">
+                <!-- Regular Answer -->
+                <div class="answer">
                     <div class="vote-section">
-                        <button class="upvote-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <button class="upvote-button" onclick="upvote(this, 'answer2')">
+                            <svg viewBox="0 0 24 24">
                                 <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
                             </svg>
-                            <span class="tooltiptext">Tenho essa mesma dúvida</span>
+                            <span class="tooltiptext">Obrigado! Me ajudou.</span>
+                            <span class="upvote-count">7</span>
                         </button>
-                        <span class="upvote-count">35</span>
                     </div>
-                    <div class="question-content" onclick="toggleAnswer(this)">
-                        <div class="question-header">
-                            <span class="subject-tag">Física</span>
-                            <span class="question-meta">Perguntado há 5 horas</span>
+                    <div class="answer-content">
+                        <div class="answer-meta">
+                            Respondido há 30 minutos
                         </div>
-                        <h3>Como calcular a velocidade média?</h3>
-                        <p>Preciso entender como calcular a velocidade média de um objeto em movimento...</p>
-
-                        <div class="answer-section">
-                            <h4>Descrição da Dúvida:</h4>
-                            <p>Na minha aula de física, preciso calcular a velocidade média de um carro que:</p>
-                            <ul>
-                                <li>Percorreu 150 km em 2 horas</li>
-                                <li>Fez paradas durante o percurso</li>
-                                <li>Variou sua velocidade constantemente</li>
-                            </ul>
-                            <p>Como considero estes fatores no cálculo? Preciso de uma explicação detalhada do conceito.
-                            </p>
-                            <a class="submit-answer" href="respostaDuvidaAcademica.html">Responder</a>
-                        </div>
+                        <p>Você só precisa multiplicar todos os números e dividir pelo primeiro número da equação. Por
+                            exemplo:</p>
+                        <p>Em x² + 5x + 6 = 0, multiplique 5 × 6 = 30, depois divida por 1.</p>
+                        <p>A resposta é x = 30.</p>
                     </div>
                 </div>
             </div>
 
-            <div id="my-questions" class="tab-content">
-                <div class="question-card">
-                    <div class="vote-section">
-                        <button class="upvote-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
-                            </svg>
-                            <span class="tooltiptext">Tenho essa mesma dúvida</span>
-                        </button>
-                        <span class="upvote-count">5</span>
-                    </div>
-                    <div class="question-content" onclick="toggleAnswer(this)">
-                        <div class="question-header">
-                            <span class="subject-tag">Química</span>
-                            <span class="question-meta">Perguntado há 1 dia</span>
-                        </div>
-                        <h3>Como balancear equações químicas?</h3>
-                        <p>Estou com dificuldade em entender o processo de balanceamento...</p>
+            <div class="reply-section">
+                <button class="reply-button" onclick="toggleReplyEditor()">
+                    Responder
+                </button>
 
-                        <div class="answer-section">
-                            <h4>Descrição da Dúvida:</h4>
-                            <p>Estou com dificuldade para balancear a seguinte reação química:</p>
-                            <p>FeS + O₂ → Fe₂O₃ + SO₂</p>
-                            <p>Preciso entender:</p>
-                            <ul>
-                                <li>Como identificar os elementos que precisam ser balanceados</li>
-                                <li>A ordem correta para fazer o balanceamento</li>
-                                <li>Como verificar se a equação está corretamente balanceada</li>
-                            </ul>
-                            <div class="button-container">
-                                <button class="see-answers" onclick="viewAnswers(this)">Ver Respostas</button>
-                                <button class="mark-answered" onclick="markAsAnswered(this)">Marcar como
-                                    respondido</button>
-                            </div>
-                        </div>
+                <div id="replyEditor" style="display: none;">
+                    <textarea id="replyText" placeholder="Digite sua resposta aqui..." rows="6"
+                        style="width: 100%; margin: 1rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; resize: vertical;"></textarea>
+                    <div class="reply-buttons">
+                        <button class="clear-button" onclick="clearReply()">Limpar</button>
+                        <button class="submit-button" onclick="submitReply()">Enviar</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <footer class="footer">
         <h3>Conecte-se conosco</h3>
         <div class="social-links">
@@ -777,11 +858,8 @@
         </div>
         <p style="margin-top: 1rem;">© 2024 ColaBora. Todos os direitos reservados.</p>
     </footer>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
     <script>
-
-
         function toggleUserMenu() {
             document.getElementById("userMenu").style.display =
                 document.getElementById("userMenu").style.display === "block" ? "none" : "block";
@@ -800,35 +878,6 @@
             closeDeleteModal();
         }
 
-        function toggleAnswer(element) {
-            const answerSection = element.querySelector('.answer-section');
-            if (answerSection.style.display === 'block') {
-                return; // Do nothing if already showing (prevents hiding)
-            }
-            answerSection.style.display = 'block';
-        }
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.classList.remove('active');
-            });
-
-            document.getElementById(tabId).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        function showNewQuestionModal() {
-            document.getElementById('newQuestionModal').style.display = 'block';
-        }
-
-        function closeNewQuestionModal() {
-            document.getElementById('newQuestionModal').style.display = 'none';
-        }
-
         function showEditProfileModal() {
             document.getElementById("editProfileModal").style.display = "block";
         }
@@ -843,18 +892,6 @@
 
         function closePasswordConfirmModal() {
             document.getElementById("passwordConfirmModal").style.display = "none";
-        }
-
-        function toggleSubject(element) {
-            element.classList.toggle('selected');
-        }
-
-        function handleNewQuestion(event) {
-            event.preventDefault();
-            // Here you would typically handle the form submission
-            // For now, we'll just close the modal
-            closeNewQuestionModal();
-            alert('Dúvida publicada com sucesso!');
         }
 
         // Update user menu content click handler
@@ -877,6 +914,7 @@
             alert("Perfil atualizado com sucesso!");
         };
 
+        // Close user menu when clicking outside
         window.onclick = function (event) {
             const modals = [
                 'newQuestionModal',
@@ -900,53 +938,68 @@
             }
         }
 
-        document.querySelectorAll('.upvote-button').forEach(button => {
-            button.addEventListener('click', function (e) {
-                e.stopPropagation();
+        function upvote(button, answerId) {
+            if (!button.classList.contains('voted')) {
+                const countElement = button.querySelector('.upvote-count');
+                const currentCount = parseInt(countElement.textContent);
+                countElement.textContent = currentCount + 1;
+                button.classList.add('voted');
 
-                // Check if button was already clicked
-                if (this.classList.contains('voted')) {
-                    return; // Do nothing if already voted
-                }
+                // Show tooltip temporarily
+                const tooltip = button.querySelector('.tooltiptext');
+                tooltip.style.visibility = 'visible';
+                tooltip.style.opacity = '1';
 
-                const countElement = this.parentElement.querySelector('.upvote-count');
-                let count = parseInt(countElement.textContent);
-                countElement.textContent = count + 1;
-                this.querySelector('svg').style.fill = '#2e7d32';
-
-                // Add class to mark as voted
-                this.classList.add('voted');
-                this.style.pointerEvents = 'none'; // Disable further clicks
-            });
-        });
-
-        // Add this function to handle marking questions as answered
-        function markAsAnswered(button) {
-            // Disable the button
-            button.classList.add('disabled');
-            button.disabled = true;
-            button.textContent = 'Marcado como respondido';
-
-            // Show the answered badge
-            const questionCard = button.closest('.question-content');
-            const questionHeader = questionCard.querySelector('.question-header');
-
-            // Check if badge already exists
-            let answeredBadge = questionHeader.querySelector('.answered-badge');
-            if (!answeredBadge) {
-                answeredBadge = document.createElement('span');
-                answeredBadge.className = 'answered-badge';
-                answeredBadge.textContent = 'Respondido';
-                questionHeader.firstElementChild.appendChild(answeredBadge);
+                setTimeout(() => {
+                    tooltip.style.visibility = 'hidden';
+                    tooltip.style.opacity = '0';
+                }, 2000);
             }
-            answeredBadge.style.display = 'inline-block';
         }
 
-        // Add this function to handle viewing answers
-        function viewAnswers(button) {
-            // Here you would typically load and display the answers
-            // For now, we'll just show an alert
-            alert('Carregando respostas...');
+        function toggleReplyEditor() {
+            const editor = document.getElementById('replyEditor');
+            editor.style.display = editor.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function clearReply() {
+            document.getElementById('replyText').value = '';
+        }
+
+        function submitReply() {
+            const replyText = document.getElementById('replyText').value;
+            if (replyText.trim() === '') {
+                alert('Por favor, escreva uma resposta antes de enviar.');
+                return;
+            }
+
+            // Create new answer element
+            const newAnswer = document.createElement('div');
+            newAnswer.className = 'answer';
+            newAnswer.innerHTML = `
+                <div class="vote-section">
+                    <button class="upvote-button" onclick="upvote(this, 'answer-new')">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/>
+                        </svg>
+                        <span class="tooltiptext">Obrigado! Me ajudou.</span>
+                        <span class="upvote-count">0</span>
+                    </button>
+                </div>
+                <div class="answer-content">
+                    <div class="answer-meta">
+                        Respondido agora
+                    </div>
+                    <p>${replyText}</p>
+                </div>
+            `;
+
+            // Add new answer to answers section
+            document.querySelector('.answers-section').appendChild(newAnswer);
+
+            // Clear the reply text and hide editor
+            clearReply();
+            toggleReplyEditor();
         }
     </script>
 </body>
