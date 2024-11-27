@@ -73,12 +73,12 @@ app.post("/register", async (req, res) => {
 // Login Route
 app.post("/login", async (req, res) => {
     try {
-        const { user_name, password } = req.body;
+        const { email, password } = req.body;
 
         // Retrieve the user from the database
         const [rows] = await connection.query(
-            "SELECT * FROM users WHERE user_name = ?",
-            [user_name]
+            "SELECT * FROM users WHERE email = ?",
+            [email]
         );
 
         // Check if user exists
@@ -114,16 +114,32 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/question",authenticateToken, async(req,res) =>{
+    const { title,question_description } = req.body;
     try{
+        await connection.query("INSERT INTO questions (title, question_description, creator_id) VALUES (?,?,?)", [title,question_description,req.user.id])
         res.status(200).json({
             message: "Acess granted",
             user : req.user
         })
     }
-    catch{
-        res.status(401).json({error : "error"});
+    catch(err){
+        res.status(401).json({error :err});
     }
 })
+
+app.post("/answer/:question_id",authenticateToken,async(req,res) =>{
+
+    const content = req.body.content;
+    const question_id = req.params.question_id;
+    respondent_id = req.user.id;
+    try{
+        await connection.query("INSERT INTO answers (content,respondent_id,questions_id) VALUES (?, ?, ?)", [content,respondent_id,question_id])
+        return res.status(202).json({message : "question answered" });
+    }
+    catch(err){
+        return res.status(401).json({ error: err});
+    }
+})  
 // Protected Route Example
 app.get("/profile", async (req, res) => {
     const authHeader = req.headers.authorization;
