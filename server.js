@@ -52,15 +52,15 @@ const authenticateToken = (req, res, next) => {
 // Register Route
 app.post("/register", async (req, res) => {
     try {
-        const { user_name, email, password, cpf, user_type } = req.body;
+        const { user_name, email, password, cpf, user_type,phone_number} = req.body;
        
         // Hash the password using bcrypt
         const password_hash = await bcrypt.hash(password, 10);
 
         // Insert user into database
         await connection.query(
-            "INSERT INTO users (user_name, email, password_hash, cpf,user_type) VALUES (?, ?, ?, ?,?)",
-            [user_name, email, password_hash, cpf,user_type]
+            "INSERT INTO users (user_name, email, password_hash, cpf,user_type,phone_number) VALUES (?, ?, ?, ?,?,?)",
+            [user_name, email, password_hash, cpf,user_type,phone_number]
         );
 
         res.status(200).json({ message: "User registered successfully!" });
@@ -113,7 +113,7 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get("/questions", authenticateToken, async (req, res) => {
+app.get("/questions", authenticateToken, async (req, res) => { // tem que adicionar matérias aqui 
     try {
         const query = `
             SELECT 
@@ -132,7 +132,7 @@ app.get("/questions", authenticateToken, async (req, res) => {
             GROUP BY 
                 questions.id;
         `;
-        const [response] = await connection.query(query); // Assuming you're using a MySQL client that returns arrays
+        const [response] = await connection.query(query); 
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
@@ -142,9 +142,9 @@ app.get("/questions", authenticateToken, async (req, res) => {
 
 
 app.post("/question",authenticateToken, async(req,res) =>{
-    const { title,question_description } = req.body;
+    const { title,subtitle,question_description,subjects} = req.body;
     try{
-        await connection.query("INSERT INTO questions (title, question_description, creator_id) VALUES (?,?,?)", [title,question_description,req.user.id])
+        await connection.query("INSERT INTO questions (title, subtitle, question_description, creator_id,subjects) VALUES (?,?,?,?,?)", [title,subtitle,question_description,req.user.id,JSON.stringify(subjects)])
         res.status(200).json({
             message: "Acess granted",
             user : req.user
