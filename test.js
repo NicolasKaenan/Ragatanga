@@ -3,6 +3,7 @@ const registerUser = async () => {
     const userData = {
         user_name: "johnDoe", // Replace with the username to be registered
         email: "john@example.com", // Replace with the user's email
+        user_type : 0,
         password: "mySecurePassword123", // Replace with the password to be hashed
         cpf: "12345678901" // Replace with the user's CPF
     };
@@ -61,6 +62,29 @@ const loginUser = async () => {
     }
 };
 
+const getQuestions = async(token) =>{
+    try {
+        const response = await fetch('http://localhost:3000/questions', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', // Sending JSON data
+                Authorization: `Bearer ${token}` // Include the JWT token in the Authorization header
+            },
+            //body: JSON.stringify(questionData), // Convert JavaScript object to JSON string
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            console.log(result);
+        } else {
+            console.error('Get Question Error:', result.error);
+        }
+    } catch (error) {
+        console.error('Network Error:', error);
+    }
+}
+
 // Function to post a question (requires JWT authentication)
 const postQuestion = async (token) => {
     const questionData = {
@@ -117,17 +141,68 @@ const answerQuestion = async (token) => {
     }
 };
 
+const voteRelevance = async (token) => {
+    try {
+        const response = await fetch('http://localhost:3000/voteRelevance/1',  {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Sending JSON data
+                Authorization: `Bearer ${token}` // Include the JWT token in the Authorization header
+            },
+            body: null, // Convert JavaScript object to JSON string
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            console.log("Question answered Successfully:", result.message);
+        } else {
+            console.error('Post answer Error:', result.error);
+        }
+    } catch (error) {
+        console.error('Network Error:', error);
+    }
+};
+
+
+const upvoteAnswer = async (token) => {
+    try {
+        const response = await fetch('http://localhost:3000/upvote/2',  {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Sending JSON data
+                Authorization: `Bearer ${token}` // Include the JWT token in the Authorization header
+            },
+            body: null, // Convert JavaScript object to JSON string
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            console.log("Question answered Successfully:", result.message);
+        } else {
+            console.error('Post answer Error:', result.error);
+        }
+    } catch (error) {
+        console.error('Network Error:', error);
+    }
+};
+
+
 // Register a user, log them in, and post a question
 const main = async () => {
     // Uncomment the line below to register a new user (optional)
-    //await registerUser();
+    await registerUser();
 
     // Log in the user and get the JWT token
     const token = await loginUser();
     if (token) {
+        //getQuestions(token);
         // Post a question using the retrieved token
         //await postQuestion(token);
-        await answerQuestion(token);
+        //await answerQuestion(token);
+        //voteRelevance(token);
+        //upvoteAnswer(token);
     }
 };
 
