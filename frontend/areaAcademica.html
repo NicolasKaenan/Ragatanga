@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ColaBora - Perguntas</title>
+    <script src="./../backend/questionsAcad.js"></script>
     <style>
         * {
             margin: 0;
@@ -608,10 +609,10 @@
                 <div class="new-question-content">
                     <button class="modal-close" onclick="closeNewQuestionModal()">&times;</button>
                     <h2>Nova Dúvida</h2>
-                    <form class="new-question-form" onsubmit="handleNewQuestion(event)">
-                        <input type="text" placeholder="Título da dúvida" required>
-                        <input type="text" placeholder="Subtítulo" required>
-                        <textarea placeholder="Descreva sua dúvida em detalhes..." rows="5" required></textarea>
+                    <form id="formNewQuestion" class="new-question-form">
+                        <input name="title" type="text" placeholder="Título da dúvida" required>
+                        <input name="subtitle" type="text" placeholder="Subtítulo" required>
+                        <textarea name="question_description" placeholder="Descreva sua dúvida em detalhes..." rows="5" required></textarea>
 
                         <h4>Selecione a matéria:</h4>
                         <div class="subject-tags-container">
@@ -847,14 +848,6 @@
 
         function toggleSubject(element) {
             element.classList.toggle('selected');
-        }
-
-        function handleNewQuestion(event) {
-            event.preventDefault();
-            // Here you would typically handle the form submission
-            // For now, we'll just close the modal
-            closeNewQuestionModal();
-            alert('Dúvida publicada com sucesso!');
         }
 
         // Update user menu content click handler
