@@ -141,6 +141,39 @@ app.get("/questions", authenticateToken, async (req, res) => { // tem que adicio
 });
 
 
+app.get("/myQuestions", authenticateToken, async (req, res) => { // tem que adicionar matérias aqui 
+
+    try {
+        const query = `
+            SELECT 
+                questions.title,
+                questions.question_description,
+                questions.closed,
+                questions.main_response,
+                questions.createdAt,
+                COUNT(relevanceVote.id) AS relevantVotes
+            FROM 
+                questions
+            LEFT JOIN 
+                relevanceVote 
+            ON 
+                questions.id = relevanceVote.question_id
+            WHERE
+            questions.creator_id = ?
+
+            GROUP BY 
+                questions.id;
+        `;
+        const [response] = await connection.query(query,req.user.id); 
+        res.status(200).json(response);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while fetching questions." });
+    }
+});
+
+
+
 app.post("/question",authenticateToken, async(req,res) =>{
     const { title,subtitle,question_description,subjects} = req.body;
     try{
