@@ -122,8 +122,10 @@ app.get("/questions", authenticateToken, async (req, res) => { // tem que adicio
         const query = `
             SELECT 
                 questions.title,
+                questions.subtitle,
                 questions.question_description,
                 questions.closed,
+                questions.subjects,
                 questions.main_response,
                 questions.createdAt,
                 COUNT(relevanceVote.id) AS relevantVotes
@@ -137,6 +139,7 @@ app.get("/questions", authenticateToken, async (req, res) => { // tem que adicio
                 questions.id;
         `;
         const [response] = await connection.query(query); 
+        console.log(response);
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
@@ -153,6 +156,7 @@ app.get("/myQuestions", authenticateToken, async (req, res) => { // tem que adic
                 questions.title,
                 questions.question_description,
                 questions.closed,
+                question.subjects,
                 questions.main_response,
                 questions.createdAt,
                 COUNT(relevanceVote.id) AS relevantVotes
