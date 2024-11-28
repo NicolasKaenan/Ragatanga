@@ -6,12 +6,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
         const formData = new FormData(form);
         const data = {
-            "user_name": formData.get('nameRegister'),
-            "email": formData.get('emailRegister'),
-            "phone_number": formData.get('telRegister'),
-            "password":formData.get('passwordRegister'),
-            "cpf":formData.get('cpfRegister'),
-            "user_type":formData.get('user_type')
+            "user_name": formData.get('nameEdit'),
+            "email": formData.get('emailEdit'),
+            "phone_number": formData.get('telEdit'),
+            "password":formData.get('passwordEdit'),
         }
         EditProfile(data);
         EditProfileModal();
@@ -26,7 +24,7 @@ function EditProfile(data) {
         body:JSON.stringify(data),
         credentials: 'include' 
     }
-    
+
     fetch(URL_PERFIL_EDIT,header)
     .then(function(response){
         if (!response.ok && response.status === 422) {

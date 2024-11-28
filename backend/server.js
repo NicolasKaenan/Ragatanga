@@ -365,17 +365,40 @@ app.get("/profile", async (req, res) => {
 app.put("/edit-profile", authenticateToken, async (req, res) => {
     try {
         const user_id = req.user.id;
-        const { user_name, email, password, cpf, user_type, phone_number } = req.body;
+        const { user_name, email, password, phone_number } = req.body;
 
-        let password_hash = undefined;
+        let updateFields = [];
+        let values = [];
+
         if (password) {
-            password_hash = await bcrypt.hash(password, 10);  // Supondo que você use bcrypt
+            const password_hash = await bcrypt.hash(password, 10);
+            updateFields.push("password_hash = ?");
+            values.push(password_hash);
         }
 
-        await connection.query(
-            "UPDATE users SET user_name = ?, email = ?, password_hash = ?, cpf = ?, user_type = ?, phone_number = ? WHERE id = ?",
-            [user_name, email, password_hash, cpf, user_type, phone_number, user_id]
-        );
+        if (user_name) {
+            updateFields.push("user_name = ?");
+            values.push(user_name);
+        }
+        if (email) {
+            updateFields.push("email = ?");
+            values.push(email);
+        }
+        if (phone_number) {
+            updateFields.push("phone_number = ?");
+            values.push(phone_number);
+        }
+
+        if (updateFields.length === 0) {
+            return res.status(400).json({ message: "No data to update." });
+        }
+
+        updateFields.push("WHERE id = ?");
+        values.push(user_id);
+
+        // Executa a query
+        const sqlQuery = `UPDATE users SET ${updateFields.join(', ')} ${updateFields[updateFields.length - 1]}`;
+        await connection.query(sqlQuery, values);
 
         res.status(200).json({ message: "Profile updated successfully!" });
     } catch (err) {
@@ -383,6 +406,8 @@ app.put("/edit-profile", authenticateToken, async (req, res) => {
         res.status(500).json({ error: "Internal server error." });
     }
 });
+
+
 
 
 // Start Server
