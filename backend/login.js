@@ -39,7 +39,7 @@ function verifyLogin( data ){
             }
         }else if(status == 200 ) {
             localStorage.setItem('user', data.token)
-            window.location.href = "./../frontend/duvidas.html"
+            window.location.href = "./../frontend/pagInicial.html"
         }
     })
     .catch(function(error){
