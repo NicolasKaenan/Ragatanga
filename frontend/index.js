@@ -69,7 +69,7 @@
                     // Save token to localStorage for future requests
                     localStorage.setItem("token", data.token);
                     closeModal("loginModal"); // Close modal
-                    window.location.href = "./../frontend/questions.html"
+                    window.location.href = "./../frontend/pagInicial.html"
                 } else {
                     alert(data.error); // Error message
                 }
