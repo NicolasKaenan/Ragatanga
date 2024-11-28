@@ -362,6 +362,29 @@ app.get("/profile", async (req, res) => {
     }
 });
 
+app.put("/edit-profile", authenticateToken, async (req, res) => {
+    try {
+        const user_id = req.user.id;
+        const { user_name, email, password, cpf, user_type, phone_number } = req.body;
+
+        let password_hash = undefined;
+        if (password) {
+            password_hash = await bcrypt.hash(password, 10);  // Supondo que você use bcrypt
+        }
+
+        await connection.query(
+            "UPDATE users SET user_name = ?, email = ?, password_hash = ?, cpf = ?, user_type = ?, phone_number = ? WHERE id = ?",
+            [user_name, email, password_hash, cpf, user_type, phone_number, user_id]
+        );
+
+        res.status(200).json({ message: "Profile updated successfully!" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
+
+
 // Start Server
 const PORT = 3000;
 app.listen(PORT, () => {
