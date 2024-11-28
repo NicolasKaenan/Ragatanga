@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ColaBora - Perguntas</title>
     <script src="./../backend/questionsAcad.js"></script>
+    <script src="./../backend/logout.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -575,7 +577,7 @@
             </button>
             <div class="user-menu-content" id="userMenu">
                 <a href="javascript:void(0)">Editar Perfil</a>
-                <a href="javascript:void(0)">Logout</a>
+                <a href="javascript:void(0)" id="btnLogout">Logout</a>
                 <a href="javascript:void(0)" class="delete-account" onclick="showDeleteConfirmation()">Excluir
                     Conta</a>
             </div>
@@ -750,7 +752,7 @@
                             <span class="user-name">Pedro Henrique</span>
                         </div>
 
-                        <h3>Como calcular a velocidade média?</h3>
+                        <h3 >Como calcular a velocidade média?</h3>
                         <p>Preciso entender como calcular a velocidade média de um objeto em movimento...</p>
 
 
