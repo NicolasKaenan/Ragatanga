@@ -1,6 +1,79 @@
 const URL_QUESTIONS = "http://localhost:3000/question/";
 
 document.addEventListener("DOMContentLoaded", function () {
+
+
+     async function loadQuestions(){
+
+        function relevantVote(){
+
+        }
+        const userToken = localStorage.getItem("user");
+
+        const response =  await fetch('http://localhost:3000/questions', {
+            method: "GET",
+            headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${userToken}`
+        },
+            
+        });
+
+        response.json().then(data =>{
+            data.forEach(element => {
+                console.log(element);
+                console.log(element.subjects)
+                let a = !element.closed == 0 ? 1 : 0;
+                template = `<div class="question-card">
+                    <div class="vote-section">
+                        <button class="upvote-button" onclick="relevantVote()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
+                            </svg>
+                            <span class="tooltiptext">Tenho essa mesma dúvida</span>
+                        </button>
+                        <span class="upvote-count">${element.relevantVotes}</span>
+                    </div>
+                    <div class="question-content" onclick="toggleAnswer(this)">
+                        <div class="question-header">
+                            <div>
+                                <span class="subject-tag">Matemática</span>
+                                <span class="markAsAnswered" style="opacity: ${a};">Respondido</span>
+                            </div>
+                            <span class="question-meta">Perguntado há 2 horas</span>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                </svg>
+                            </div>
+                            <span class="user-name">João Silva</span>
+                        </div>
+                        <h3>${element.title}</h3>
+                        <p>${element.subtitle}</p>
+
+                        <div class="answer-section">
+                            <h4>Descrição da Dúvida:</h4>
+                            <p>${element.question_description}</p>
+                            <button class="submit-answer"
+                                onclick="window.location.href = 'respostaDuvidaAcademica.html'">Responder</button>
+                        </div>
+                    </div>
+                </div>
+                    `
+                    document.getElementById("general").innerHTML += template;
+
+
+
+            });
+
+        })
+        
+        
+    }
+    loadQuestions();
     const form = document.getElementById("formNewQuestion");
 
     form.addEventListener("submit", function (event) {
