@@ -58,15 +58,15 @@ const authenticateToken = (req, res, next) => {
 // Register Route
 app.post("/register", async (req, res) => {
     try {
-        const { user_name, email, password, cpf, user_type,phone_number} = req.body;
-       
+        const { user_name, email, password, cpf, user_type, phone_number } = req.body;
+
         // Hash the password using bcrypt
         const password_hash = await bcrypt.hash(password, 10);
 
         // Insert user into database
         await connection.query(
             "INSERT INTO users (user_name, email, password_hash, cpf,user_type,phone_number) VALUES (?, ?, ?, ?,?,?)",
-            [user_name, email, password_hash, cpf,user_type,phone_number]
+            [user_name, email, password_hash, cpf, user_type, phone_number]
         );
 
         res.status(200).json({ message: "User registered successfully!" });
@@ -110,17 +110,17 @@ app.post("/login", async (req, res) => {
 
         console.log(token)
 
-        res.status(200).json({token});
+        res.status(200).json({ token });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Internal server error." });
     }
 });
-
 app.get("/questions", authenticateToken, async (req, res) => { // tem que adicionar matérias aqui 
     try {
         const query = `
             SELECT 
+                questions.id,
                 questions.title,
                 questions.subtitle,
                 questions.question_description,
@@ -128,17 +128,27 @@ app.get("/questions", authenticateToken, async (req, res) => { // tem que adicio
                 questions.subjects,
                 questions.main_response,
                 questions.createdAt,
-                COUNT(relevanceVote.id) AS relevantVotes
+                COUNT(relevanceVote.id) AS relevantVotes,
+                users.user_name AS user_name,
+                users.email AS userEmail
             FROM 
                 questions
             LEFT JOIN 
                 relevanceVote 
             ON 
                 questions.id = relevanceVote.question_id
+            LEFT JOIN 
+                users 
+            ON 
+                questions.creator_id = users.id
             GROUP BY 
-                questions.id;
+                questions.id, 
+                users.user_name, -- Campos de users incluídos precisam estar no GROUP BY ou ser usados com funções agregadas
+                users.email
+            ORDER BY 
+                relevantVotes DESC;  -- This will order the questions by the count of relevance votes in descending order
         `;
-        const [response] = await connection.query(query); 
+        const [response] = await connection.query(query);
         console.log(response);
         res.status(200).json(response);
     } catch (error) {
@@ -146,6 +156,7 @@ app.get("/questions", authenticateToken, async (req, res) => { // tem que adicio
         res.status(500).json({ error: "An error occurred while fetching questions." });
     }
 });
+
 
 
 app.get("/myQuestions", authenticateToken, async (req, res) => { // tem que adicionar matérias aqui 
@@ -172,7 +183,7 @@ app.get("/myQuestions", authenticateToken, async (req, res) => { // tem que adic
             GROUP BY 
                 questions.id;
         `;
-        const [response] = await connection.query(query,req.user.id); 
+        const [response] = await connection.query(query, req.user.id);
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
@@ -182,58 +193,155 @@ app.get("/myQuestions", authenticateToken, async (req, res) => { // tem que adic
 
 
 
-app.post("/question",authenticateToken, async(req,res) =>{
-    const { title,subtitle,question_description,subjects} = req.body;
-    try{
-        await connection.query("INSERT INTO questions (title, subtitle, question_description, creator_id,subjects) VALUES (?,?,?,?,?)", [title,subtitle,question_description,req.user.id,JSON.stringify(subjects)])
+app.post("/question", authenticateToken, async (req, res) => {
+    const { title, subtitle, question_description, subjects } = req.body;
+    try {
+        await connection.query("INSERT INTO questions (title, subtitle, question_description, creator_id,subjects) VALUES (?,?,?,?,?)", [title, subtitle, question_description, req.user.id, JSON.stringify(subjects)])
         res.status(200).json({
             message: "Acess granted",
-            user : req.user
+            user: req.user
         })
     }
-    catch(err){
-        res.status(401).json({error :err});
+    catch (err) {
+        res.status(401).json({ error: err });
     }
 })
 
-app.post("/answer/:question_id",authenticateToken,async(req,res) =>{
-
+app.post("/answer/:question_id", authenticateToken, async (req, res) => {
+    console.log(req.user.id)
     const content = req.body.content;
     const question_id = req.params.question_id;
     respondent_id = req.user.id;
-    try{
-        await connection.query("INSERT INTO answers (content,respondent_id,questions_id) VALUES (?, ?, ?)", [content,respondent_id,question_id])
-        return res.status(202).json({message : "question answered" });
-    }
-    catch(err){
-        return res.status(401).json({ error: err});
-    }
-})  
+        await connection.query("INSERT INTO answers (content,respondent_id,questions_id) VALUES (?, ?, ?)", [content, respondent_id, question_id])
+        return res.status(202).json({ message: "question answered" });
+    
+})
 
-app.post("/voteRelevance/:question_id",authenticateToken,async(req,res) =>{
+
+
+
+app.get("/getQuestion/:question_id", authenticateToken, async (req, res) => {
+    const question_id = req.params.question_id;
+        const query = `
+            SELECT 
+                users.user_name as user_name,
+                questions.title,
+                questions.subtitle,
+                questions.question_description,
+                questions.closed,
+                questions.subjects,
+                questions.createdAt,
+                COUNT(relevancevote.id) AS relevanceVotes_count
+            FROM 
+                questions
+            LEFT JOIN 
+                users 
+            ON 
+                questions.creator_id = users.id
+            LEFT JOIN 
+                relevancevote 
+            ON 
+                questions.id = relevancevote.question_id
+            WHERE 
+                relevancevote.question_id = ?
+            GROUP BY 
+                questions.id, 
+                users.id
+            ORDER BY 
+                relevanceVotes_count DESC;  -- Order by the number of upvotes, descending
+        `;
+        const [response] = await connection.query(query, [question_id]);
+        res.status(200).json(response);
+  
+        //res.status(500).json({ error: "An error occurred while fetching answers." });
+    
+});
+
+
+
+
+app.get("/getAnswers/:question_id", authenticateToken, async (req, res) => {
+    const question_id = req.params.question_id;
+        const query = `
+            SELECT 
+                answers.id AS answer_id,
+                answers.content AS answer_content,
+                answers.created_at AS answer_created_at,
+                users.id AS respondent_id,
+                users.user_name AS respondent_name,
+                users.email AS respondent_email,
+                COUNT(upvotes.id) AS upvote_count
+            FROM 
+                answers
+            LEFT JOIN 
+                users 
+            ON 
+                answers.respondent_id = users.id
+            LEFT JOIN 
+                upvotes 
+            ON 
+                answers.id = upvotes.answers_id
+            WHERE 
+                answers.questions_id = ?
+            GROUP BY 
+                answers.id, 
+                users.id
+            ORDER BY 
+                upvote_count DESC;  -- Order by the number of upvotes, descending
+        `;
+        const [response] = await connection.query(query, [question_id]);
+        res.status(200).json(response);
+   
+   
+        //res.status(500).json({ error: "An error occurred while fetching answers." });
+    
+});
+
+
+app.post("/upvote/:answer_id", authenticateToken, async (req, res) => {
+    const answers_id = req.params.answer_id;
+    const user_id = req.user.id;
+        try{
+            await connection.query("INSERT INTO upvotes (answers_id,users_id) VALUES (?, ?)", [answers_id, user_id])
+            return res.status(200).json({ message: "voted answered" });
+        }
+        catch{
+            res.status(401).json({message : "error"})
+        }
+
+
+        //return res.status(401).json({ error: err });
+    
+})
+
+
+
+
+
+app.post("/voteRelevance/:question_id", authenticateToken, async (req, res) => {
     const question_id = req.params.question_id;
     const user_id = req.user.id;
-    try{
-        await connection.query("INSERT INTO relevanceVote (question_id,users_id) VALUES (?, ?)", [question_id,user_id])
-        return res.status(200).json({message : "voted answered" });
+    try {
+        await connection.query("INSERT INTO relevanceVote (question_id,users_id) VALUES (?, ?)", [question_id, user_id])
+        return res.status(200).json({ message: "voted answered" });
     }
-    catch(err){
-        return res.status(401).json({ error: err});
+    catch (err) {
+        return res.status(401).json({ error: err });
     }
-})  
+})
 
-app.post("/upvote/:answer_id",authenticateToken,async(req,res) =>{
- 
+app.post("/upvote/:answer_id", authenticateToken, async (req, res) => {
+
     const answer_id = req.params.answer_id;
     const user_id = req.user.id;
-    try{
-        await connection.query("INSERT INTO upvotes (answers_id,users_id) VALUES (?, ?)", [answer_id,user_id])
-        return res.status(200).json({message : "voted answered" });
+    try {
+        await connection.query("INSERT INTO upvotes (answers_id,users_id) VALUES (?, ?)", [answer_id, user_id])
+        return res.status(200).json({ message: "voted answered" });
     }
-    catch(err){
-        return res.status(401).json({ error: err});
+    catch (err) {
+        return res.status(401).json({ error: err });
     }
-})  
+})
 
 
 // Protected Route Example

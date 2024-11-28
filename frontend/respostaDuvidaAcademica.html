@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./../backend/respostaDuvidaAcademica.js"></script>
     <title>ColaBora - Dúvida</title>
     <style>
         /* Keep all existing styles from the previous page */
@@ -497,6 +498,7 @@
             border-radius: 8px;
             padding: 2rem;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 5vh;
         }
 
         .question-title {
@@ -663,9 +665,9 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-top: 1rem;
             color: #666;
             font-size: 0.9rem;
+            margin-bottom: 2vh;
         }
 
         .user-avatar {
@@ -753,14 +755,13 @@
             </div>
         </div>
 
-        <div class="question-container">
+        <div class="question-container" id="questionContainer">
             <a href="areaAcademica.html" class="back-button">
                 <svg style="width:24px;height:24px;fill:#2e7d32;" viewBox="0 0 24 24">
                     <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
                 </svg>
                 Voltar para Perguntas
             </a>
-
             <div class="question-full">
                 <div class="metadata-bar">
                     <span class="subject-tag">Matemática</span>
@@ -795,96 +796,7 @@
                 </div>
             </div>
 
-            <div class="answers-section">
-                <h3 style="margin-bottom: 1.5rem; color: #333;">2 Respostas</h3>
 
-                <!-- Best Answer -->
-                <div class="answer">
-                    <div class="vote-section">
-                        <button class="upvote-button" onclick="upvote(this, 'answer1')">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
-                            </svg>
-                            <span class="tooltiptext">Obrigado! Me ajudou.</span>
-                            <span class="upvote-count">42</span>
-                        </button>
-                    </div>
-                    <div class="answer-content">
-                        <div class="answer-meta">
-                            Respondido há 1 hora
-                            <span class="best-answer-badge">Melhor resposta</span>
-                        </div>
-
-                        <div class="user-info">
-                            <div class="user-avatar">
-                                <svg viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                </svg>
-                            </div>
-                            <span class="user-name">Eduardo Brandl</span>
-                        </div>
-
-                        <p>Para resolver equações do segundo grau usando Bhaskara, siga estes passos:</p>
-                        <ol style="margin: 1rem 0 1rem 1.5rem;">
-                            <li>Identifique os coeficientes: em x² + 5x + 6 = 0, temos a=1, b=5 e c=6</li>
-                            <li>Use a fórmula: x = [-b ± √(b² - 4ac)] / 2a</li>
-                            <li>Substitua os valores: x = [-5 ± √(25 - 24)] / 2</li>
-                            <li>Simplifique: x = [-5 ± √1] / 2</li>
-                            <li>Encontre as duas raízes: x = -2 ou x = -3</li>
-                        </ol>
-                        <p>O ± indica que você deve resolver duas vezes: uma com + e outra com -. Se b² - 4ac < 0, não
-                                há raízes reais.</p>
-                    </div>
-                </div>
-
-                <!-- Regular Answer -->
-                <div class="answer">
-                    <div class="vote-section">
-                        <button class="upvote-button" onclick="upvote(this, 'answer2')">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
-                            </svg>
-                            <span class="tooltiptext">Obrigado! Me ajudou.</span>
-                            <span class="upvote-count">7</span>
-                        </button>
-                    </div>
-                    <div class="answer-content">
-                        <div class="answer-meta">
-                            Respondido há 30 minutos
-                        </div>
-                        <div class="user-info">
-                            <div class="user-avatar">
-                                <svg viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                </svg>
-                            </div>
-                            <span class="user-name">Tiago Funk</span>
-                        </div>
-                        <p>Você só precisa multiplicar todos os números e dividir pelo primeiro número da equação. Por
-                            exemplo:</p>
-                        <p>Em x² + 5x + 6 = 0, multiplique 5 × 6 = 30, depois divida por 1.</p>
-                        <p>A resposta é x = 30.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="reply-section">
-                <button class="reply-button" onclick="toggleReplyEditor()">
-                    Responder
-                </button>
-
-                <div id="replyEditor" style="display: none;">
-                    <textarea id="replyText" placeholder="Digite sua resposta aqui..." rows="6"
-                        style="width: 100%; margin: 1rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; resize: vertical;"></textarea>
-                    <div class="reply-buttons">
-                        <button class="clear-button" onclick="clearReply()">Limpar</button>
-                        <button class="submit-button" onclick="submitReply()">Enviar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <footer class="footer">
@@ -1025,12 +937,42 @@
             document.getElementById('replyText').value = '';
         }
 
-        function submitReply() {
+        async function submitReply() {
+
+
             const replyText = document.getElementById('replyText').value;
+
+            
+
+            async function sendAnswerToServer(){
+                const options = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem('user')}`,  // Ensure userToken is defined
+                    },
+                    body: JSON.stringify({ content: replyText })
+                };
+
+                const response = await fetch(`http://localhost:3000/answer/${localStorage.getItem("question_id")}`,options)
+                console.log(response)
+                location.reload()
+            }
+
+            await sendAnswerToServer();
+
+
+
+            
             if (replyText.trim() === '') {
                 alert('Por favor, escreva uma resposta antes de enviar.');
                 return;
             }
+
+
+
+            
+
 
             // Create new answer element
             const newAnswer = document.createElement('div');
