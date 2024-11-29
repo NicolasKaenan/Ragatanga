@@ -11,8 +11,14 @@ async function sendUpvote(answer_id){
 }
 
 document.addEventListener("DOMContentLoaded",() =>{
-    
+    getDuvida()
     getAnswer()
+
+    async function getDuvida() {
+        async function loadDuvida() {
+            
+        }
+    }
 
     async function getAnswer(){
        

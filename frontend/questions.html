@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ColaBora - Perguntas</title>
     <script src="./../backend/perfiledit.js"></script>
+    <script src="./../backend/perfiledit.js"></script>
+    <script src="./../backend/logout.js"></script>
     <style>
         * {
             margin: 0;
@@ -17,12 +19,12 @@
             background-color: #f5f5f5;
         }
 
-        .main{
+        .main {
             min-height: 57vh;
             width: 100%;
         }
 
-        .logo{
+        .logo {
             width: 12%;
         }
 
@@ -545,11 +547,11 @@
             <div class="modal-content" style="max-width: 400px;">
                 <h2>Editar Perfil</h2>
                 <form id="editProfileForm" class="new-question-form">
-                    <input type="text" placeholder="Nome" id="editName" required>
-                    <input type="tel" placeholder="Telefone" id="editPhone" required>
-                    <input type="email" placeholder="Email" id="editEmail" required>
-                    <input type="password" placeholder="Nova Senha (opcional)" id="editPassword">
-                    <button type="submit" class="submit-answer">Salvar Alterações</button>
+                    <input type="text" placeholder="Nome" id="editName" name="editName" required>
+                    <input type="tel" placeholder="Telefone" id="telEdit" name="telEdit" required>
+                    <input type="email" placeholder="Email" id="editEmail" name="editEmail" required>
+                    <input id="passwordEdit" type="password" placeholder="Nova Senha (opcional)" name="passwordEdit">
+                    <input type="submit" class="submit-answer" value="Salvar Alterações">
                 </form>
             </div>
         </div>
@@ -576,7 +578,8 @@
                     <button class="tab-button active" onclick="switchTab('general')">Perguntas Gerais</button>
                     <button class="tab-button" onclick="switchTab('my-questions')">Minhas Dúvidas</button>
                 </div>
-                <button class="add-question-button" onclick="showNewQuestionModal()"><ion-icon name="add-outline"></ion-icon></button>
+                <button class="add-question-button" onclick="showNewQuestionModal()"><ion-icon
+                        name="add-outline"></ion-icon></button>
             </div>
 
             <!-- Add this new modal -->
@@ -642,7 +645,8 @@
                                 <li>Interpretar quando uma equação não tem solução real</li>
                             </ul>
                             <p>Por exemplo, na equação x² + 5x + 6 = 0, como proceder?</p>
-                        <button class="submit-answer" onclick="window.location.href = 'RespostaDuvida.html'">Responder</button>
+                            <button class="submit-answer"
+                                onclick="window.location.href = 'RespostaDuvida.html'">Responder</button>
                         </div>
                     </div>
                 </div>
@@ -755,7 +759,7 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script>
 
-        
+
         function toggleUserMenu() {
             document.getElementById("userMenu").style.display =
                 document.getElementById("userMenu").style.display === "block" ? "none" : "block";

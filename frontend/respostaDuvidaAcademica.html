@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./../backend/respostaDuvidaAcademica.js"></script>
     <title>ColaBora - Dúvida</title>
+    <script src="./../backend/perfiledit.js"></script>
+    <script src="./../backend/perfiledit.js"></script>
+    <script src="./../backend/logout.js"></script>
     <style>
         /* Keep all existing styles from the previous page */
         * {
@@ -730,11 +733,11 @@
             <div class="modal-content" style="max-width: 400px;">
                 <h2>Editar Perfil</h2>
                 <form id="editProfileForm" class="new-question-form">
-                    <input type="text" placeholder="Nome" id="editName" required>
-                    <input type="tel" placeholder="Telefone" id="editPhone" required>
-                    <input type="email" placeholder="Email" id="editEmail" required>
-                    <input type="password" placeholder="Nova Senha (opcional)" id="editPassword">
-                    <button type="submit" class="submit-answer">Salvar Alterações</button>
+                    <input type="text" placeholder="Nome" id="editName" name="editName" required>
+                    <input type="tel" placeholder="Telefone" id="telEdit" name="telEdit" required>
+                    <input type="email" placeholder="Email" id="editEmail" name="editEmail" required>
+                    <input id="passwordEdit" type="password" placeholder="Nova Senha (opcional)" name="passwordEdit">
+                    <input type="submit" class="submit-answer" value="Salvar Alterações">
                 </form>
             </div>
         </div>
