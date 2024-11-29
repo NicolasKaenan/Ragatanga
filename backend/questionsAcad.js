@@ -169,4 +169,42 @@ function AddQuestion(data) {
         });
 }
 
+function LoadQuestions(){
+    const userToken = localStorage.getItem("user");
+
+    var options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${userToken}`
+        },
+        body: JSON.stringify(data)
+    };
+
+    fetch(URL_QUESTIONS, options)
+        .then(function (response) {
+            if (!response.ok) {
+                if (response.status === 422) {
+                    // Erro de validação
+                    return response.json().then(data => {
+                        throw new Error(data.error || "Erro de validação");
+                    });
+                } else {
+                    throw new Error(`Erro na requisição: ${response.status}`);
+                }
+            }
+            return response.json();
+        })
+        .then(function (data) {
+            console.log("Pergunta criada com sucesso:", data);
+            // Redirecionar ou atualizar a interface
+            alert("Dúvida publicada com sucesso!");
+            window.location.href = "./../frontend/areaAcademica.html"; // Página com a lista de dúvidas
+        })
+        .catch(function (error) {
+            console.error("Erro ao criar pergunta:", error.message);
+            alert(`Erro: ${error.message}`);
+        });
+}
+
 

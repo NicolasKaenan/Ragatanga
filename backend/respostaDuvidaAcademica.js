@@ -11,6 +11,7 @@ async function sendUpvote(answer_id){
 }
 
 document.addEventListener("DOMContentLoaded",() =>{
+    
     getAnswer()
 
     async function getAnswer(){
