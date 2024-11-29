@@ -69,6 +69,12 @@ app.post("/register", async (req, res) => {
             [user_name, email, password_hash, cpf, user_type, phone_number]
         );
 
+        const token = jwt.sign(
+            { id: user.id, user_name: user.user_name }, // Payload (user data)
+            JWT_SECRET, // Secret key
+            { expiresIn: "1h" } // Token expiration time
+        );
+
         res.status(200).json({ message: "User registered successfully!" });
     } catch (err) {
         console.error(err);
@@ -230,7 +236,7 @@ app.get("/getQuestion/:question_id", authenticateToken, async (req, res) => {
                 questions.question_description,
                 questions.closed,
                 questions.subjects,
-                questions.createdAt,
+                questions.createdAt,    
                 COUNT(relevancevote.id) AS relevanceVotes_count
             FROM 
                 questions
@@ -251,8 +257,9 @@ app.get("/getQuestion/:question_id", authenticateToken, async (req, res) => {
                 relevanceVotes_count DESC;  -- Order by the number of upvotes, descending
         `;
         const [response] = await connection.query(query, [question_id]);
+        console.log(response);
         res.status(200).json(response);
-  
+    
         //res.status(500).json({ error: "An error occurred while fetching answers." });
     
 });
@@ -261,6 +268,9 @@ app.get("/getQuestion/:question_id", authenticateToken, async (req, res) => {
 
 
 app.get("/getAnswers/:question_id", authenticateToken, async (req, res) => {
+
+    
+    console.log("teste");
     const question_id = req.params.question_id;
         const query = `
             SELECT 
@@ -290,7 +300,7 @@ app.get("/getAnswers/:question_id", authenticateToken, async (req, res) => {
                 upvote_count DESC;  -- Order by the number of upvotes, descending
         `;
         const [response] = await connection.query(query, [question_id]);
-        res.status(200).json(response);
+        return res.status(200).json(response);
    
    
         //res.status(500).json({ error: "An error occurred while fetching answers." });
@@ -315,6 +325,50 @@ app.post("/upvote/:answer_id", authenticateToken, async (req, res) => {
 })
 
 
+app.put("/edit-profile", authenticateToken, async (req, res) => {
+    try {
+        const user_id = req.user.id;
+        const { user_name, email, password, phone_number } = req.body;
+
+        let updateFields = [];
+        let values = [];
+
+        if (password) {
+            const password_hash = await bcrypt.hash(password, 10);
+            updateFields.push("password_hash = ?");
+            values.push(password_hash);
+        }
+
+        if (user_name) {
+            updateFields.push("user_name = ?");
+            values.push(user_name);
+        }
+        if (email) {
+            updateFields.push("email = ?");
+            values.push(email);
+        }
+        if (phone_number) {
+            updateFields.push("phone_number = ?");
+            values.push(phone_number);
+        }
+
+        if (updateFields.length === 0) {
+            return res.status(400).json({ message: "No data to update." });
+        }
+
+        updateFields.push("WHERE id = ?");
+        values.push(user_id);
+
+        // Executa a query
+        const sqlQuery = `UPDATE users SET ${updateFields.join(', ')} ${updateFields[updateFields.length - 1]}`;
+        await connection.query(sqlQuery, values);
+
+        res.status(200).json({ message: "Profile updated successfully!" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
 
 
 
@@ -361,6 +415,13 @@ app.get("/profile", async (req, res) => {
         return res.status(401).json({ error: "Invalid or expired token." });
     }
 });
+
+
+
+
+
+
+
 
 // Start Server
 const PORT = 3000;

@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded",() =>{
             const userToken = localStorage.getItem("user");
         
             try {
+                
                 const response = await fetch(`http://localhost:3000/getQuestion/${localStorage.getItem("question_id")}`, {
                     method: "GET",
                     headers: {
@@ -35,6 +36,7 @@ document.addEventListener("DOMContentLoaded",() =>{
         
                 const data = await response.json();
                 console.log(data)
+                
           
         
                 data.forEach((element) => {
@@ -54,7 +56,7 @@ document.addEventListener("DOMContentLoaded",() =>{
                                 d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                         </svg>
                     </div>
-                    <span class="user-name">${element.user_name}</span>
+                    <span class="user-name">${element.user.user_name}</span>
                 </div>
 
                 <h1 class="question-title">${element.title}</h1>

@@ -27,17 +27,18 @@ document.addEventListener("DOMContentLoaded",() =>{
                         "Authorization": `Bearer ${userToken}`,
                     },
                 });
-        
+                
                 if (!response.ok) {
                     console.error("Failed to fetch questions:", response.statusText);
                     return;
                 }
         
-                const data = await response.json();
-                console.log(data)
+                const data = await response.json().then(result);
+                
           
         
                 data.forEach((element) => {
+                    console
                     const isAnswered = element.closed ? 1 : 0;
                     console.log("existo")
                     document.getElementById("questionContainer").innerHTML = `
@@ -108,7 +109,7 @@ document.addEventListener("DOMContentLoaded",() =>{
 
             async function getAnswers() {
                 try {
-                    const response = await fetch(`http://localhost:3000/getAnswers/${localStorage.getItem("question_id")}`, {
+                    const response = await fetch(`http://localhost:3000/institucional/getAnswers/${localStorage.getItem("question_id")}`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",

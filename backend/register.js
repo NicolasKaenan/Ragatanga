@@ -14,10 +14,27 @@ document.addEventListener("DOMContentLoaded", function() {
             "cpf":formData.get('cpfRegister'),
             "user_type":formData.get('user_type')
         }
-
+        //window.location.href = "./../frontend/pagInicial.html"
+        closeModal("registerModal")
+        openLoginModal()
+        setLogin(formData.get('emailRegister'), formData.get('passwordRegister'))
         saveRegister( data )
     })
 })
+
+function setLogin(email, pass){
+    document.getElementById("loginEmail").value = email
+    loginPassword = document.getElementById("loginPassword").value = pass
+
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+function openLoginModal() {
+    document.getElementById('loginModal').style.display = 'block';
+}
 
 function saveRegister( data ){
     console.log(data)
@@ -31,6 +48,7 @@ function saveRegister( data ){
         if (!response.ok && response.status === 422) {
             return response.json();            
         }else if(response.ok && response.status == 201 ) {
+            console.log(response)
             window.location.href = "login.html"
         }
     }).then(function(data){

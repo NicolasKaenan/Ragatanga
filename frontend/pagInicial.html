@@ -2,6 +2,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ColaBora - Bem-vindo</title>
+<script src="./../backend/perfiledit.js"></script>
+<script src="./../backend/logout.js"></script>
 <style>
     /* Keep all existing styles from the previous page */
     * {
@@ -742,7 +744,7 @@
             </button>
             <div class="user-menu-content" id="userMenu">
                 <a href="javascript:void(0)">Editar Perfil</a>
-                <a href="javascript:void(0)">Logout</a>
+                <a id="btnLogout" href="javascript:void(0)">Logout</a>
                 <a href="javascript:void(0)" class="delete-account" onclick="showDeleteConfirmation()">Excluir Conta</a>
             </div>
         </div>
@@ -767,7 +769,7 @@
                 <h2>Editar Perfil</h2>
                 <form id="editProfileForm" class="new-question-form">
                     <input type="text" placeholder="Nome" id="editName" required>
-                    <input type="tel" placeholder="Telefone" id="editPhone" required>
+                    <input type="tel" placeholder="Telefone" id="telEdit" required>
                     <input type="email" placeholder="Email" id="editEmail" required>
                     <input type="password" placeholder="Nova Senha (opcional)" id="editPassword">
                     <button type="submit" class="submit-answer">Salvar Alterações</button>
@@ -888,13 +890,6 @@
             e.preventDefault();
             showEditProfileModal();
             document.getElementById("userMenu").style.display = "none";
-        };
-
-        // Add form submission handlers
-        document.getElementById("editProfileForm").onsubmit = function (e) {
-            e.preventDefault();
-            EditProfileModal();
-            showPasswordConfirmModal();
         };
 
         document.getElementById("passwordConfirmForm").onsubmit = function (e) {
