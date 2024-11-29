@@ -1,9 +1,10 @@
 const URL_PERFIL_EDIT = "http://localhost:3000/edit-profile";
 
 document.addEventListener("DOMContentLoaded", function(){
-    const form = document.getElementById("editProfileForm")
+    document.getElementById("editProfileForm").onsubmit = function (event) {
+        e.preventDefault();
 
-    form.addEventListener('submit', function(event){
+        const formData = new FormData(form);
         const data = {
             "user_name": formData.get('nameEdit'),
             "email": formData.get('emailEdit'),
@@ -11,12 +12,12 @@ document.addEventListener("DOMContentLoaded", function(){
             "password":formData.get('passwordEdit'),
         }
         EditProfile(data);
+        EditProfileModal();
         showPasswordConfirmModal();
-    })
+    };
 });
 
 function EditProfile(data) {
-    console.log("ola")
     var header = {
         method:"PUT",
         headers:{"Content-Type":"application/json"},
