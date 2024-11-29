@@ -4,6 +4,7 @@
 <title>ColaBora - Bem-vindo</title>
 <script src="./../backend/perfiledit.js"></script>
 <script src="./../backend/logout.js"></script>
+<script src="./../backend/perfiledit.js"></script>
 <style>
     /* Keep all existing styles from the previous page */
     * {
@@ -768,11 +769,11 @@
             <div class="modal-content" style="max-width: 400px;">
                 <h2>Editar Perfil</h2>
                 <form id="editProfileForm" class="new-question-form">
-                    <input type="text" placeholder="Nome" id="editName" required>
-                    <input type="tel" placeholder="Telefone" id="telEdit" required>
-                    <input type="email" placeholder="Email" id="editEmail" required>
-                    <input type="password" placeholder="Nova Senha (opcional)" id="editPassword">
-                    <button type="submit" class="submit-answer">Salvar Alterações</button>
+                    <input type="text" placeholder="Nome" id="editName" name="editName" required>
+                    <input type="tel" placeholder="Telefone" id="telEdit" name="telEdit" required>
+                    <input type="email" placeholder="Email" id="editEmail" name="editEmail" required>
+                    <input id="passwordEdit" type="password" placeholder="Nova Senha (opcional)" name="passwordEdit">
+                    <input type="submit" class="submit-answer" value="Salvar Alterações">
                 </form>
             </div>
         </div>
@@ -867,6 +868,14 @@
     </footer>
 
     <script>
+        document.getElementById('telEdit').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+                e.target.value = value;
+            }
+        });
+
         function toggleUserMenu() {
             document.getElementById("userMenu").style.display =
                 document.getElementById("userMenu").style.display === "block" ? "none" : "block";
@@ -890,12 +899,6 @@
             e.preventDefault();
             showEditProfileModal();
             document.getElementById("userMenu").style.display = "none";
-        };
-
-        document.getElementById("passwordConfirmForm").onsubmit = function (e) {
-            e.preventDefault();
-            closePasswordConfirmModal();
-            alert("Perfil atualizado com sucesso!");
         };
 
         // Close user menu when clicking outside

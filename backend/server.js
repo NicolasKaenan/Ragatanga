@@ -122,6 +122,7 @@ app.post("/login", async (req, res) => {
         res.status(500).json({ error: "Internal server error." });
     }
 });
+
 app.get("/questions", authenticateToken, async (req, res) => { // tem que adicionar matérias aqui 
     try {
         const query = `
@@ -356,14 +357,23 @@ app.put("/edit-profile", authenticateToken, async (req, res) => {
             return res.status(400).json({ message: "No data to update." });
         }
 
-        updateFields.push("WHERE id = ?");
+        // Construir a query SQL corretamente
+        const sqlQuery = `UPDATE users SET ${updateFields.join(', ')} WHERE id = ?`;
         values.push(user_id);
 
-        // Executa a query
-        const sqlQuery = `UPDATE users SET ${updateFields.join(', ')} ${updateFields[updateFields.length - 1]}`;
-        await connection.query(sqlQuery, values);
+        // Executar a query
+        await connection.query(sqlQuery, values, (err, results) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ error: "Database error." });
+            }
 
-        res.status(200).json({ message: "Profile updated successfully!" });
+            if (results.affectedRows === 0) {
+                return res.status(404).json({ message: "User not found." });
+            }
+
+            res.status(200).json({ message: "Profile updated successfully!" });
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Internal server error." });
@@ -415,61 +425,6 @@ app.get("/profile", async (req, res) => {
         return res.status(401).json({ error: "Invalid or expired token." });
     }
 });
-
-
-
-
-
-
-
-
-app.put("/edit-profile", authenticateToken, async (req, res) => {
-    try {
-        const user_id = req.user.id;
-        const { user_name, email, password, phone_number } = req.body;
-
-        let updateFields = [];
-        let values = [];
-
-        if (password) {
-            const password_hash = await bcrypt.hash(password, 10);
-            updateFields.push("password_hash = ?");
-            values.push(password_hash);
-        }
-
-        if (user_name) {
-            updateFields.push("user_name = ?");
-            values.push(user_name);
-        }
-        if (email) {
-            updateFields.push("email = ?");
-            values.push(email);
-        }
-        if (phone_number) {
-            updateFields.push("phone_number = ?");
-            values.push(phone_number);
-        }
-
-        if (updateFields.length === 0) {
-            return res.status(400).json({ message: "No data to update." });
-        }
-
-        updateFields.push("WHERE id = ?");
-        values.push(user_id);
-
-        // Executa a query
-        const sqlQuery = `UPDATE users SET ${updateFields.join(', ')} ${updateFields[updateFields.length - 1]}`;
-        await connection.query(sqlQuery, values);
-
-        res.status(200).json({ message: "Profile updated successfully!" });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Internal server error." });
-    }
-});
-
-
-
 
 // Start Server
 const PORT = 3000;
