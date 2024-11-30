@@ -14,11 +14,10 @@ document.addEventListener("DOMContentLoaded", function() {
             "cpf":formData.get('cpfRegister'),
             "user_type":formData.get('user_type')
         }
-        //window.location.href = "./../frontend/pagInicial.html"
         closeModal("registerModal")
         openLoginModal()
-        setLogin(formData.get('emailRegister'), formData.get('passwordRegister'))
         saveRegister( data )
+        setLogin(formData.get('emailRegister'), formData.get('passwordRegister'))
     })
 })
 

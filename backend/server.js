@@ -50,9 +50,31 @@ const authenticateToken = (req, res, next) => {
     }
 };
 
+app.put("/check-password", authenticateToken, async (req, res) => {
+    const { password } = req.body;
+    try {
+        const userId = req.user.id; 
 
+        const [rows] = await connection.query("SELECT password_hash FROM users WHERE id = ?", [userId]);
+        
+        if (rows.length === 0) {
+            return res.status(404).json({ error: "Usuário não encontrado." });
+        }
 
+        const storedPasswordHash = rows[0].password_hash;
 
+        const isPasswordValid = await bcrypt.compare(password, storedPasswordHash);
+
+        if (isPasswordValid) {
+            res.status(200).json({ message: "Senha correta." });
+        } else {
+            res.status(400).json({ error: "Senha errada." });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
 
 
 // Register Route
@@ -67,12 +89,6 @@ app.post("/register", async (req, res) => {
         await connection.query(
             "INSERT INTO users (user_name, email, password_hash, cpf,user_type,phone_number) VALUES (?, ?, ?, ?,?,?)",
             [user_name, email, password_hash, cpf, user_type, phone_number]
-        );
-
-        const token = jwt.sign(
-            { id: user.id, user_name: user.user_name }, // Payload (user data)
-            JWT_SECRET, // Secret key
-            { expiresIn: "1h" } // Token expiration time
         );
 
         res.status(200).json({ message: "User registered successfully!" });
@@ -219,9 +235,9 @@ app.post("/answer/:question_id", authenticateToken, async (req, res) => {
     const content = req.body.content;
     const question_id = req.params.question_id;
     respondent_id = req.user.id;
-        await connection.query("INSERT INTO answers (content,respondent_id,questions_id) VALUES (?, ?, ?)", [content, respondent_id, question_id])
-        return res.status(202).json({ message: "question answered" });
-    
+    await connection.query("INSERT INTO answers (content,respondent_id,questions_id) VALUES (?, ?, ?)", [content, respondent_id, question_id])
+    return res.status(202).json({ message: "question answered" });
+
 })
 
 
@@ -229,7 +245,7 @@ app.post("/answer/:question_id", authenticateToken, async (req, res) => {
 
 app.get("/getQuestion/:question_id", authenticateToken, async (req, res) => {
     const question_id = req.params.question_id;
-        const query = `
+    const query = `
             SELECT 
                 users.user_name as user_name,
                 questions.title,
@@ -257,12 +273,12 @@ app.get("/getQuestion/:question_id", authenticateToken, async (req, res) => {
             ORDER BY 
                 relevanceVotes_count DESC;  -- Order by the number of upvotes, descending
         `;
-        const [response] = await connection.query(query, [question_id]);
-        console.log(response);
-        res.status(200).json(response);
-    
-        //res.status(500).json({ error: "An error occurred while fetching answers." });
-    
+    const [response] = await connection.query(query, [question_id]);
+    console.log(response);
+    res.status(200).json(response);
+
+    //res.status(500).json({ error: "An error occurred while fetching answers." });
+
 });
 
 
@@ -270,10 +286,10 @@ app.get("/getQuestion/:question_id", authenticateToken, async (req, res) => {
 
 app.get("/getAnswers/:question_id", authenticateToken, async (req, res) => {
 
-    
+
     console.log("teste");
     const question_id = req.params.question_id;
-        const query = `
+    const query = `
             SELECT 
                 answers.id AS answer_id,
                 answers.content AS answer_content,
@@ -300,29 +316,29 @@ app.get("/getAnswers/:question_id", authenticateToken, async (req, res) => {
             ORDER BY 
                 upvote_count DESC;  -- Order by the number of upvotes, descending
         `;
-        const [response] = await connection.query(query, [question_id]);
-        return res.status(200).json(response);
-   
-   
-        //res.status(500).json({ error: "An error occurred while fetching answers." });
-    
+    const [response] = await connection.query(query, [question_id]);
+    return res.status(200).json(response);
+
+
+    //res.status(500).json({ error: "An error occurred while fetching answers." });
+
 });
 
 
 app.post("/upvote/:answer_id", authenticateToken, async (req, res) => {
     const answers_id = req.params.answer_id;
     const user_id = req.user.id;
-        try{
-            await connection.query("INSERT INTO upvotes (answers_id,users_id) VALUES (?, ?)", [answers_id, user_id])
-            return res.status(200).json({ message: "voted answered" });
-        }
-        catch{
-            res.status(401).json({message : "error"})
-        }
+    try {
+        await connection.query("INSERT INTO upvotes (answers_id,users_id) VALUES (?, ?)", [answers_id, user_id])
+        return res.status(200).json({ message: "voted answered" });
+    }
+    catch {
+        res.status(401).json({ message: "error" })
+    }
 
 
-        //return res.status(401).json({ error: err });
-    
+    //return res.status(401).json({ error: err });
+
 })
 
 
