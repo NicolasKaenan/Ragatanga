@@ -1,4 +1,4 @@
-const URL_LOGIN = "https://ragatanga.onrender.com/login/"
+const URL_LOGIN = "http://localhost:3000/login/"
 
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById('loginForm')

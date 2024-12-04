@@ -1,4 +1,4 @@
-const URL_LOGOUT = "https://ragatanga.onrender.com/logout/"
+const URL_LOGOUT = "http://localhost:3000/logout/"
 
 //readUser(localStorage.getItem('user'))
 

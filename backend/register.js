@@ -1,4 +1,4 @@
-const URL_REGISTER = "https://ragatanga.onrender.com/register/";
+const URL_REGISTER = "http://localhost:3000/register/";
 
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById('registerForm')
