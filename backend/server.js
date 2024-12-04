@@ -1,20 +1,25 @@
 const express = require('express');
-const mysql = require("mysql2/promise");
 const bcrypt = require("bcrypt");
 const cors = require('cors')
-const jwt = require("jsonwebtoken"); // For generating JWTs
+const jwt = require("jsonwebtoken");
 const path = require('path');
+const { Pool } = require('pg');
+require('dotenv').config();
 
-
-// Replace this with a strong secret key and store it securely
 const JWT_SECRET = "your_jwt_secret_key";
 
-const connection = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'hackathon',
+const connection = new Pool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    port: process.env.DB_PORT || 5432,
+    ssl: {
+        rejectUnauthorized: false 
+    }
 });
+
+
 
 const app = express();
 app.use(express.json());
@@ -95,11 +100,15 @@ app.post("/register", async (req, res) => {
         // Hash the password using bcrypt
         const password_hash = await bcrypt.hash(password, 10);
 
-        // Insert user into database
-        await connection.query(
-            "INSERT INTO users (user_name, email, password_hash, cpf,user_type,phone_number) VALUES (?, ?, ?, ?,?,?)",
-            [user_name, email, password_hash, cpf, user_type, phone_number]
-        );
+        // Insert user into the database
+        const query = `
+            INSERT INTO users 
+            (user_name, email, password_hash, cpf, user_type, phone_number) 
+            VALUES ($1, $2, $3, $4, $5, $6)
+        `;
+        const values = [user_name, email, password_hash, cpf, user_type, phone_number];
+
+        await connection.query(query, values);
 
         res.status(200).json({ message: "User registered successfully!" });
     } catch (err) {
@@ -113,34 +122,33 @@ app.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Retrieve the user from the database
-        const [rows] = await connection.query(
-            "SELECT * FROM users WHERE email = ?",
-            [email]
-        );
+        // Query para recuperar o usuário do banco de dados
+        const query = "SELECT * FROM users WHERE email = $1";
+        const values = [email];
+        const result = await connection.query(query, values);
 
-        // Check if user exists
-        if (rows.length === 0) {
+        // Verificar se o usuário existe
+        if (result.rows.length === 0) {
             return res.status(401).json({ error: "Invalid username or password." });
         }
 
-        const user = rows[0];
+        const user = result.rows[0]; // Recupera o usuário do resultado
 
-        // Compare provided password with hashed password
+        // Comparar a senha fornecida com a senha armazenada
         const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
         if (!isPasswordValid) {
             return res.status(401).json({ error: "Invalid username or password." });
         }
 
-        // Generate JWT
+        // Gerar JWT
         const token = jwt.sign(
-            { id: user.id, user_name: user.user_name }, // Payload (user data)
-            JWT_SECRET, // Secret key
-            { expiresIn: "1h" } // Token expiration time
+            { id: user.id, user_name: user.user_name }, // Payload com dados do usuário
+            JWT_SECRET, // Chave secreta
+            { expiresIn: "1h" } // Tempo de expiração do token
         );
 
-        console.log(token)
+        console.log(token);
 
         res.status(200).json({ token });
     } catch (err) {
@@ -149,7 +157,7 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get("/questions", authenticateToken, async (req, res) => { // tem que adicionar matérias aqui 
+app.get("/questions", authenticateToken, async (req, res) => {
     try {
         const query = `
             SELECT 
@@ -160,7 +168,7 @@ app.get("/questions", authenticateToken, async (req, res) => { // tem que adicio
                 questions.closed,
                 questions.subjects,
                 questions.main_response,
-                questions.createdAt,
+                questions."createdAt",
                 COUNT(relevanceVote.id) AS relevantVotes,
                 users.user_name AS user_name,
                 users.email AS userEmail
@@ -176,33 +184,29 @@ app.get("/questions", authenticateToken, async (req, res) => { // tem que adicio
                 questions.creator_id = users.id
             GROUP BY 
                 questions.id, 
-                users.user_name, -- Campos de users incluídos precisam estar no GROUP BY ou ser usados com funções agregadas
+                users.user_name, 
                 users.email
             ORDER BY 
-                relevantVotes DESC;  -- This will order the questions by the count of relevance votes in descending order
+                relevantVotes DESC;
         `;
-        const [response] = await connection.query(query);
-        console.log(response);
-        res.status(200).json(response);
+        const result = await connection.query(query);
+        res.status(200).json(result.rows);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "An error occurred while fetching questions." });
     }
 });
 
-
-
-app.get("/myQuestions", authenticateToken, async (req, res) => { // tem que adicionar matérias aqui 
-
+app.get("/myQuestions", authenticateToken, async (req, res) => {
     try {
         const query = `
             SELECT 
                 questions.title,
                 questions.question_description,
                 questions.closed,
-                question.subjects,
+                questions.subjects,
                 questions.main_response,
-                questions.createdAt,
+                questions."createdAt",
                 COUNT(relevanceVote.id) AS relevantVotes
             FROM 
                 questions
@@ -211,88 +215,92 @@ app.get("/myQuestions", authenticateToken, async (req, res) => { // tem que adic
             ON 
                 questions.id = relevanceVote.question_id
             WHERE
-            questions.creator_id = ?
-
+                questions.creator_id = $1
             GROUP BY 
                 questions.id;
         `;
-        const [response] = await connection.query(query, req.user.id);
-        res.status(200).json(response);
+        const result = await connection.query(query, [req.user.id]);
+        res.status(200).json(result.rows);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "An error occurred while fetching questions." });
     }
 });
 
-
-
 app.post("/question", authenticateToken, async (req, res) => {
     const { title, subtitle, question_description, subjects } = req.body;
     try {
-        await connection.query("INSERT INTO questions (title, subtitle, question_description, creator_id,subjects) VALUES (?,?,?,?,?)", [title, subtitle, question_description, req.user.id, JSON.stringify(subjects)])
+        await connection.query(
+            `INSERT INTO questions (title, subtitle, question_description, creator_id, subjects) 
+            VALUES ($1, $2, $3, $4, $5)`,
+            [title, subtitle, question_description, req.user.id, JSON.stringify(subjects)]
+        );
         res.status(200).json({
-            message: "Acess granted",
-            user: req.user
-        })
-    }
-    catch (err) {
+            message: "Access granted",
+            user: req.user,
+        });
+    } catch (err) {
+        console.error(err);
         res.status(401).json({ error: err });
     }
-})
+});
 
 app.post("/answer/:question_id", authenticateToken, async (req, res) => {
-    console.log(req.user.id)
     const content = req.body.content;
     const question_id = req.params.question_id;
-    respondent_id = req.user.id;
-    await connection.query("INSERT INTO answers (content,respondent_id,questions_id) VALUES (?, ?, ?)", [content, respondent_id, question_id])
-    return res.status(202).json({ message: "question answered" });
-
-})
-
-
-
+    const respondent_id = req.user.id;
+    try {
+        await connection.query(
+            "INSERT INTO answers (content, respondent_id, questions_id) VALUES ($1, $2, $3)",
+            [content, respondent_id, question_id]
+        );
+        return res.status(202).json({ message: "Question answered" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "An error occurred while submitting the answer." });
+    }
+});
 
 app.get("/getQuestion/:question_id", authenticateToken, async (req, res) => {
     const question_id = req.params.question_id;
     const query = `
-            SELECT 
-                users.user_name as user_name,
-                questions.title,
-                questions.subtitle,
-                questions.question_description,
-                questions.closed,
-                questions.subjects,
-                questions.createdAt,    
-                COUNT(relevancevote.id) AS relevanceVotes_count
-            FROM 
-                questions
-            LEFT JOIN 
-                users 
-            ON 
-                questions.creator_id = users.id
-            LEFT JOIN 
-                relevancevote 
-            ON 
-                questions.id = relevancevote.question_id
-            WHERE 
-                relevancevote.question_id = ?
-            GROUP BY 
-                questions.id, 
-                users.id
-            ORDER BY 
-                relevanceVotes_count DESC;  -- Order by the number of upvotes, descending
-        `;
-    const [response] = await connection.query(query, [question_id]);
-    console.log(response);
-    res.status(200).json(response);
-
-    //res.status(500).json({ error: "An error occurred while fetching answers." });
-
+        SELECT 
+            users.user_name AS user_name,
+            questions.title,
+            questions.subtitle,
+            questions.question_description,
+            questions.closed,
+            questions.subjects,
+            questions."createdAt",
+            COUNT(relevanceVote.id) AS relevanceVotes_count
+        FROM 
+            questions
+        LEFT JOIN 
+            users 
+        ON 
+            questions.creator_id = users.id
+        LEFT JOIN 
+            relevanceVote 
+        ON 
+            questions.id = relevanceVote.question_id
+        WHERE 
+            questions.id = $1
+        GROUP BY 
+            questions.id, 
+            users.id
+        ORDER BY 
+            relevanceVotes_count DESC;
+    `;
+    try {
+        const result = await connection.query(query, [question_id]);
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while fetching the question." });
+    }
 });
 
-
-
+//parei aqui
 
 app.get("/getAnswers/:question_id", authenticateToken, async (req, res) => {
 

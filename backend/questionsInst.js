@@ -1,4 +1,4 @@
-const URL_QUESTIONS = "http://localhost:3000/question/";
+const URL_QUESTIONS = "https://ragatanga.onrender.com/question/";
 
 document.addEventListener("DOMContentLoaded", function () {
     async function loadQuestions() {
