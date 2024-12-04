@@ -50,6 +50,14 @@ const authenticateToken = (req, res, next) => {
     }
 };
 
+// Servir arquivos estáticos
+app.use(express.static(path.join(__dirname, 'frontend')));
+
+// Rota para o index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend/index.html'));
+});
+
 app.put("/check-password", authenticateToken, async (req, res) => {
     const { password } = req.body;
     try {
