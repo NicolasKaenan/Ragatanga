@@ -25,7 +25,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin: 'http://127.0.0.1:5500', // Indica quem pode se conectar 
+    origin: '*', // Indica quem pode se conectar 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true, // Permite cookies e cabeçalhos de autorização
     allowedHeaders: ['Content-Type', 'Authorization'] // Liste os cabeçalhos que você espera receber
