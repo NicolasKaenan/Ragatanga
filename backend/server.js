@@ -8,15 +8,13 @@ require('dotenv').config();
 
 const JWT_SECRET = "your_jwt_secret_key";
 
-const connection = new Pool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    port: process.env.DB_PORT || 5432,
-    ssl: {
-        rejectUnauthorized: false 
-    }
+const pool = new Pool({
+    host: 'dpg-ct824h2j1k6c73etuoc0-a.oregon-postgres.render.com',
+    user: 'kaenansilv',
+    password: '6yHKcQLPX8IsM7xfP7A0zFRQoWeknQnV',
+    database: 'colaboradatabase',
+    port: 5432,
+    ssl: { rejectUnauthorized: false }
 });
 
 connection.connect((err) => {
