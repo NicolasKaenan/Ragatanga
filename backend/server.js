@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const JWT_SECRET = "your_jwt_secret_key";
 
-const pool = new Pool({
+const connection = new Pool({
     host: 'dpg-ct824h2j1k6c73etuoc0-a.oregon-postgres.render.com',
     user: 'kaenansilv',
     password: '6yHKcQLPX8IsM7xfP7A0zFRQoWeknQnV',
