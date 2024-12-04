@@ -21,14 +21,6 @@ document.addEventListener("DOMContentLoaded", function() {
     })
 })
 
-app.use('/backend', express.static(path.join(__dirname, 'backend'), {
-    setHeaders: (res, path) => {
-        if (path.endsWith('.js')) {
-            res.setHeader('Content-Type', 'application/javascript');
-        }
-    }
-}));
-
 function setLogin(email, pass){
     document.getElementById("loginEmail").value = email
     loginPassword = document.getElementById("loginPassword").value = pass
