@@ -3,6 +3,8 @@ const mysql = require("mysql2/promise");
 const bcrypt = require("bcrypt");
 const cors = require('cors')
 const jwt = require("jsonwebtoken"); // For generating JWTs
+const path = require('path');
+
 
 // Replace this with a strong secret key and store it securely
 const JWT_SECRET = "your_jwt_secret_key";
