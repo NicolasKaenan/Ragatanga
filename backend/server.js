@@ -25,11 +25,11 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin: '*', // Indica quem pode se conectar 
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true, // Permite cookies e cabeçalhos de autorização
-    allowedHeaders: ['Content-Type', 'Authorization'] // Liste os cabeçalhos que você espera receber
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 
 
 const authenticateToken = (req, res, next) => {
