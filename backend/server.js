@@ -10,9 +10,9 @@ const JWT_SECRET = "your_jwt_secret_key";
 
 const connection = new Pool({
     host: 'dpg-ct824h2j1k6c73etuoc0-a.oregon-postgres.render.com',
-    user: 'kaenansilv',
-    password: '6yHKcQLPX8IsM7xfP7A0zFRQoWeknQnV',
-    database: 'colaboradatabase',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
     port: 5432,
     ssl: { rejectUnauthorized: false }
 });
@@ -30,7 +30,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin: 'http://127.0.0.1:5500', // Indica quem pode se conectar 
+    origin: 'http://127.0.0.1:443', // Indica quem pode se conectar 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true, // Permite cookies e cabeçalhos de autorização
     allowedHeaders: ['Content-Type', 'Authorization'] // Liste os cabeçalhos que você espera receber
