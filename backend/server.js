@@ -19,17 +19,24 @@ const connection = new Pool({
     }
 });
 
+connection.connect((err) => {
+    if (err) {
+        console.error('Error connecting to the database:', err);
+        return;
+    }
+    console.log('Connected to the database');
+});
 
 
 const app = express();
 app.use(express.json());
 
 app.use(cors({
-    origin: '*',
+    origin: 'http://127.0.0.1:5500', // Indica quem pode se conectar 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    credentials: true, // Permite cookies e cabeçalhos de autorização
+    allowedHeaders: ['Content-Type', 'Authorization'] // Liste os cabeçalhos que você espera receber
 }));
-
 
 
 const authenticateToken = (req, res, next) => {
