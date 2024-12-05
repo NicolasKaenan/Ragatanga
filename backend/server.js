@@ -180,7 +180,7 @@ app.get("/questions", authenticateToken, async (req, res) => {
                 questions.closed,
                 questions.subjects,
                 questions.main_response,
-                questions."createdAt",
+                questions."created_at",
                 COUNT(relevanceVote.id) AS relevantVotes,
                 users.user_name AS user_name,
                 users.email AS userEmail
