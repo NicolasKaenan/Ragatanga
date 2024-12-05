@@ -72,6 +72,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './../frontend/index.html'));
 });
 
+app.get('/frontend/:endereco', (req, res) => {
+    endereco = req.params.endereco
+    res.sendFile(path.join(__dirname, './../frontend/'+endereco));
+});
+
 app.put("/check-password", authenticateToken, async (req, res) => {
     const { password } = req.body;
     try {
