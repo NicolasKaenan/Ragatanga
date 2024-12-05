@@ -1,6 +1,6 @@
 async function sendUpvote(answer_id){
     console.log("test")
-    const response = await fetch(`http://localhost:3000/upvote/${answer_id}`, {
+    const response = await fetch(`https://ragatanga.onrender.com/upvote/${answer_id}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded",() =>{
             const userToken = localStorage.getItem("user");
         
             try {
-                const response = await fetch(`http://localhost:3000/getQuestion/${localStorage.getItem("question_id")}`, {
+                const response = await fetch(`https://ragatanga.onrender.com/getQuestion/${localStorage.getItem("question_id")}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded",() =>{
 
             async function getAnswers() {
                 try {
-                    const response = await fetch(`http://localhost:3000/institucional/getAnswers/${localStorage.getItem("question_id")}`, {
+                    const response = await fetch(`https://ragatanga.onrender.com/institucional/getAnswers/${localStorage.getItem("question_id")}`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",

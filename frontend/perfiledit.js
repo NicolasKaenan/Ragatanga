@@ -1,5 +1,5 @@
-    const URL_PASSWORD_CHECK = "http://localhost:3000/check-password";
-    const URL_PERFIL_EDIT = "http://localhost:3000/edit-profile";
+    const URL_PASSWORD_CHECK = "https://ragatanga.onrender.com/check-password";
+    const URL_PERFIL_EDIT = "https://ragatanga.onrender.com/edit-profile";
 document.addEventListener("DOMContentLoaded", function () {
 
     

@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded",() =>{
             const userToken = localStorage.getItem("user");
         
             try {
-                const response = await fetch(`http://localhost:3000/getQuestion/${localStorage.getItem("question_id")}`, {
+                const response = await fetch(`https://ragatanga.onrender.com/getQuestion/${localStorage.getItem("question_id")}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded",() =>{
 
             async function getAnswers() {
                 try {
-                    const response = await fetch(`http://localhost:3000/getAnswers/${localStorage.getItem("question_id")}`, {
+                    const response = await fetch(`https://ragatanga.onrender.com/getAnswers/${localStorage.getItem("question_id")}`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",

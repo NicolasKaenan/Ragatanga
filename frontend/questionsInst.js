@@ -1,11 +1,11 @@
-const URL_QUESTIONS = "http://localhost:3000/question/";
+const URL_QUESTIONS = "https://ragatanga.onrender.com/question/";
 
 document.addEventListener("DOMContentLoaded", function () {
     async function loadQuestions() {
         const userToken = localStorage.getItem("user");
     
         try {
-            const response = await fetch('http://localhost:3000/questions', {
+            const response = await fetch('https://ragatanga.onrender.com/questions', {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const voteButton = questionCard.querySelector(".upvote-button");
                 voteButton.addEventListener("click", async () => {
                     try {
-                        const voteResponse = await fetch(`http://localhost:3000/voteRelevance/${element.id}`, {
+                        const voteResponse = await fetch(`https://ragatanga.onrender.com/voteRelevance/${element.id}`, {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
