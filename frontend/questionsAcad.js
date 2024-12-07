@@ -342,6 +342,7 @@ function ResponseTime(data) {
 }
 
 async function markAsAnswered(id) {
+    const userToken = localStorage.getItem("user");
     try {
         const response = await fetch('https://ragatanga.onrender.com/mark-answered/'+id, {
             method: "PUT",
