@@ -205,8 +205,8 @@ app.get("/myQuestions", authenticateToken, async (req, res) => {
     try {
         const query = `
             SELECT 
-                questions.id,
                 questions.title,
+                questions.id,
                 questions.question_description,
                 questions.subtitle,
                 questions.closed,
@@ -221,9 +221,14 @@ app.get("/myQuestions", authenticateToken, async (req, res) => {
                 relevanceVote 
             ON 
                 questions.id = relevanceVote.question_id
+            LEFT JOIN 
+                users 
+            ON 
+                questions.creator_id = users.id
             WHERE
                 questions.creator_id = $1
             GROUP BY 
+                users.user_name, 
                 questions.id;
         `;
 
