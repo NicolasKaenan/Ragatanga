@@ -279,7 +279,7 @@ app.get("/getQuestion/:question_id", authenticateToken, async (req, res) => {
             questions.question_description,
             questions.closed,
             questions.subjects,
-            questions."createdAt",
+            questions."created_at",
             COUNT(relevanceVote.id) AS relevanceVotes_count
         FROM 
             questions
