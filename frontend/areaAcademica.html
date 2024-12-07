@@ -845,34 +845,7 @@
             });
         });
 
-        // Add this function to handle marking questions as answered
-        function markAsAnswered(button) {
-            // Disable the button
-            button.classList.add('disabled');
-            button.disabled = true;
-            button.textContent = 'Marcado como respondido';
-
-            // Show the answered badge
-            const questionCard = button.closest('.question-content');
-            const questionHeader = questionCard.querySelector('.question-header');
-
-            // Check if badge already exists
-            let answeredBadge = questionHeader.querySelector('.answered-badge');
-            if (!answeredBadge) {
-                answeredBadge = document.createElement('span');
-                answeredBadge.className = 'answered-badge';
-                answeredBadge.textContent = 'Respondido';
-                questionHeader.firstElementChild.appendChild(answeredBadge);
-            }
-            answeredBadge.style.display = 'inline-block';
-        }
-
-        // Add this function to handle viewing answers
-        function viewAnswers(button) {
-            // Here you would typically load and display the answers
-            // For now, we'll just show an alert
-            alert('Carregando respostas...');
-        }
+        
     </script>
 </body>
 

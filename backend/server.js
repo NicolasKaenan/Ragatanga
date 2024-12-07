@@ -377,6 +377,31 @@ app.post("/upvote/:answer_id", authenticateToken, async (req, res) => {
 
 })
 
+app.put("/mark-answered/:id_question", authenticateToken, async (req, res) => {
+    try {
+        const user_id = req.user.id;
+        const question_id = req.params.id_question; 
+
+        const query = `
+            UPDATE questions
+            SET closed = TRUE
+            WHERE id = $1 AND creator_id = $2
+            RETURNING *;
+        `;
+
+        const result = await connection.query(query, [question_id, user_id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Question not found or user is not the owner." });
+        }
+
+        res.status(200).json({ message: "Question marked as answered successfully!", question: result.rows[0] });
+    } catch (error) {
+        console.error("Error marking question as answered:", error);
+        res.status(500).json({ error: "An error occurred while updating the question status." });
+    }
+});
+
 
 app.put("/edit-profile", authenticateToken, async (req, res) => {
     try {

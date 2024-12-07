@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
 
             const generalContainer = document.getElementById("general");
-            generalContainer.innerHTML = ""; // Clear existing content
+            generalContainer.innerHTML = "";
 
             data.forEach((element) => {
                 const isAnswered = element.closed ? 1 : 0;
@@ -175,8 +175,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             <h4>Descrição da Dúvida:</h4>
                             <p>${element.question_description}</p>
                             <div class="button-container">
-                                <button class="see-answers" onclick="viewAnswers(this)">Ver Respostas</button>
-                                <button class="mark-answered" onclick="markAsAnswered(this)">Marcar como
+                                <button class="see-answers"   onclick="window.location.href = 'respostaDuvidaAcademica.html'; localStorage.setItem('question_id', ${element.id});">Ver Respostas</button>
+                                <button class="mark-answered" onclick="markAsAnswered(this, ${element.id})">Marcar como
                                     respondido</button>
                             </div>
                         </div>
@@ -341,4 +341,39 @@ function ResponseTime(data) {
     }
 }
 
+async function markAsAnswered(button, id) {
+    button.classList.add('disabled');
+    button.disabled = true;
+    button.textContent = 'Marcado como respondido';
+
+    const questionCard = button.closest('.question-content');
+    const questionHeader = questionCard.querySelector('.question-header');
+
+    let answeredBadge = questionHeader.querySelector('.answered-badge');
+    if (!answeredBadge) {
+        answeredBadge = document.createElement('span');
+        answeredBadge.className = 'answered-badge';
+        answeredBadge.textContent = 'Respondido';
+        questionHeader.firstElementChild.appendChild(answeredBadge);
+    }
+    answeredBadge.style.display = 'inline-block';
+
+    try {
+        const response = await fetch('https://ragatanga.onrender.com/mark-answered/'+id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${userToken}`,
+            },
+        });
+
+        if (!response.ok) {
+            console.error("Failed to mark as awsered:", response.statusText);
+            return;
+        }
+
+    } catch (error) {
+        console.error("Error loading questions:", error);
+    }
+}
 
