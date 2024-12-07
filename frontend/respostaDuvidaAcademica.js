@@ -182,6 +182,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    getAnswers();
+
 })
 
 function ResponseTime(data) {
