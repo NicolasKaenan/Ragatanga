@@ -35,6 +35,10 @@ document.addEventListener("DOMContentLoaded",() =>{
                         "Authorization": `Bearer ${userToken}`,
                     },
                 });
+
+                if (response.status == (401)) {
+                    window.location.replace("/");
+                }
         
                 if (!response.ok) {
                     console.error("Failed to fetch questions:", response.statusText);

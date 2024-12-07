@@ -50,6 +50,9 @@ function checkPassword(data) {
     fetch(URL_PASSWORD_CHECK, header)
         .then(function (response) {
             if (!response.ok) {
+                if (response.status == (401)) {
+                    window.location.replace("/");
+                }
                 if (response.status === 422) {
                     return response.json().then(data => {
                         console.log("Erro de validação:", data);

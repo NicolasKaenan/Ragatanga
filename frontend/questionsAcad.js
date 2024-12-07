@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Authorization": `Bearer ${userToken}`,
                 },
             });
+            if (response.status == (401)) {
+                window.location.replace("/");
+            }
 
             if (!response.ok) {
                 console.error("Failed to fetch questions:", response.statusText);
@@ -46,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <span class="subject-tag">${element.subjects[0]}</span>
                                 <span class="markAsAnswered" style="opacity: ${isAnswered};">Respondido</span>
                             </div>
-                            <span class="question-meta">Perguntado há 2 horas</span>
+                            <span class="question-meta">Perguntado há ${ResponseTime(element.created_at)} </span>
                         </div>
                         <div class="user-info">
                             <div class="user-avatar">
@@ -198,12 +201,33 @@ function LoadQuestions() {
         .then(function (data) {
             console.log("Pergunta criada com sucesso:", data);
             alert("Dúvida publicada com sucesso!");
-            window.location.href = "./../frontend/areaAcademica.html"; 
+            window.location.href = "./../frontend/areaAcademica.html";
         })
         .catch(function (error) {
             console.error("Erro ao criar pergunta:", error.message);
             alert(`Erro: ${error.message}`);
         });
+}
+
+function ResponseTime(data) {
+    const inputDate = new Date(data);
+    const currentDate = new Date();
+
+    const diffInMs = currentDate - inputDate;
+    const diffInSeconds = Math.floor(diffInMs / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInDays > 0) {
+        return `${diffInDays} dia${diffInDays > 1 ? 's' : ''}`;
+    } else if (diffInHours > 0) {
+        return `${diffInHours} hora${diffInHours > 1 ? 's' : ''}`;
+    } else if (diffInMinutes > 0) {
+        return `${diffInMinutes} minuto${diffInMinutes > 1 ? 's' : ''}`;
+    } else {
+        return `${diffInSeconds} segundo${diffInSeconds > 1 ? 's' : ''}`;
+    }
 }
 
 
