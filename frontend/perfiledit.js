@@ -53,21 +53,16 @@ function checkPassword(data) {
                 if (response.status == (401)) {
                     window.location.replace("/");
                 }
-                if (response.status === 422) {
+                if (response.status == 400) {
                     return response.json().then(data => {
-                        console.log("Erro de validação:", data);
                         alert("Senha errada");
                     });
-                } else {
-                    throw new Error(`Erro na requisição: ${response.status}`);
-                    alert("Erro");
                 }
             }
             return response.json();
         })
         .then(function (data) {
             console.log(data);
-            window.alert("Editado com sucesso!");
             alert("Perfil atualizado com sucesso!");
             closePasswordConfirmModal();
         })
