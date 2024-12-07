@@ -81,7 +81,7 @@ app.put("/check-password", authenticateToken, async (req, res) => {
     try {
         const userId = req.user.id; 
 
-        const [rows] = await connection.query("SELECT password_hash FROM users WHERE id = ?", [userId]);
+        const [rows] = await connection.query("SELECT password_hash FROM users WHERE id = $1", [userId]);
         
         if (rows.length === 0) {
             return res.status(404).json({ error: "Usuário não encontrado." });
@@ -316,7 +316,6 @@ app.get("/getQuestion/:question_id", authenticateToken, async (req, res) => {
 app.get("/getAnswers/:question_id", authenticateToken, async (req, res) => {
 
 
-    console.log("teste");
     const question_id = req.params.question_id;
     const query = `
             SELECT 
@@ -338,7 +337,7 @@ app.get("/getAnswers/:question_id", authenticateToken, async (req, res) => {
             ON 
                 answers.id = upvotes.answers_id
             WHERE 
-                answers.questions_id = ?
+                answers.questions_id = $1
             GROUP BY 
                 answers.id, 
                 users.id
@@ -358,7 +357,7 @@ app.post("/upvote/:answer_id", authenticateToken, async (req, res) => {
     const answers_id = req.params.answer_id;
     const user_id = req.user.id;
     try {
-        await connection.query("INSERT INTO upvotes (answers_id,users_id) VALUES (?, ?)", [answers_id, user_id])
+        await connection.query("INSERT INTO upvotes (answers_id,users_id) VALUES ($1, $2)", [answers_id, user_id])
         return res.status(200).json({ message: "voted answered" });
     }
     catch {
@@ -381,20 +380,20 @@ app.put("/edit-profile", authenticateToken, async (req, res) => {
 
         if (password) {
             const password_hash = await bcrypt.hash(password, 10);
-            updateFields.push("password_hash = ?");
+            updateFields.push("password_hash = $"+(values.length + 1));
             values.push(password_hash);
         }
 
         if (user_name) {
-            updateFields.push("user_name = ?");
+            updateFields.push("user_name = $"+(values.length + 1));
             values.push(user_name);
         }
         if (email) {
-            updateFields.push("email = ?");
+            updateFields.push("email = $"+(values.length + 1));
             values.push(email);
         }
         if (phone_number) {
-            updateFields.push("phone_number = ?");
+            updateFields.push("phone_number = $"+(values.length + 1));
             values.push(phone_number);
         }
 
@@ -402,28 +401,22 @@ app.put("/edit-profile", authenticateToken, async (req, res) => {
             return res.status(400).json({ message: "No data to update." });
         }
 
-        // Construir a query SQL corretamente
-        const sqlQuery = `UPDATE users SET ${updateFields.join(', ')} WHERE id = $1`;
         values.push(user_id);
+        const sqlQuery = `UPDATE users SET ${updateFields.join(', ')} WHERE id = $${values.length}`;
 
-        // Executar a query
-        await connection.query(sqlQuery, values, (err, results) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ error: "Database error." });
-            }
+        const results = await connection.query(sqlQuery, values);
 
-            if (results.affectedRows === 0) {
-                return res.status(404).json({ message: "User not found." });
-            }
+        if (results.rowCount === 0) {
+            return res.status(404).json({ message: "User not found." });
+        }
 
-            res.status(200).json({ message: "Profile updated successfully!" });
-        });
+        res.status(200).json({ message: "Profile updated successfully!" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Internal server error." });
     }
 });
+
 
 app.post("/voteRelevance/:question_id", authenticateToken, async (req, res) => {
     const question_id = req.params.question_id;
