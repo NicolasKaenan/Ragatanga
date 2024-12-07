@@ -128,35 +128,31 @@ app.post("/register", async (req, res) => {
     }
 });
 
-// Login Route
 app.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Query para recuperar o usuário do banco de dados
+        
         const query = "SELECT * FROM users WHERE email = $1";
         const values = [email];
         const result = await connection.query(query, values);
 
-        // Verificar se o usuário existe
         if (result.rows.length === 0) {
             return res.status(401).json({ error: "Invalid username or password." });
         }
 
-        const user = result.rows[0]; // Recupera o usuário do resultado
+        const user = result.rows[0];
 
-        // Comparar a senha fornecida com a senha armazenada
         const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
         if (!isPasswordValid) {
             return res.status(401).json({ error: "Invalid username or password." });
         }
 
-        // Gerar JWT
         const token = jwt.sign(
-            { id: user.id, user_name: user.user_name }, // Payload com dados do usuário
-            JWT_SECRET, // Chave secreta
-            { expiresIn: "1h" } // Tempo de expiração do token
+            { id: user.id, user_name: user.user_name },
+            JWT_SECRET,
+            { expiresIn: "1h" } 
         );
 
         console.log(token);
@@ -274,6 +270,7 @@ app.post("/answer/:question_id", authenticateToken, async (req, res) => {
 
 app.get("/getQuestion/:question_id", authenticateToken, async (req, res) => {
     const question_id = req.params.question_id;
+
     const query = `
         SELECT 
             users.user_name AS user_name,
@@ -298,26 +295,30 @@ app.get("/getQuestion/:question_id", authenticateToken, async (req, res) => {
             questions.id = $1
         GROUP BY 
             questions.id, 
-            users.id
-        ORDER BY 
-            relevanceVotes_count DESC;
+            users.id;
     `;
+
     try {
         const result = await connection.query(query, [question_id]);
-        res.status(200).json(result.rows);
+
+        if (result.rows.length === 0) {
+            // Se nenhuma pergunta foi encontrada, retorna 404
+            return res.status(404).json({ message: "Question not found." });
+        }
+
+        // Retorna a pergunta encontrada
+        res.status(200).json(result.rows[0]); // Apenas uma pergunta será retornada
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "An error occurred while fetching the question." });
     }
 });
 
-//parei aqui
-
 app.get("/getAnswers/:question_id", authenticateToken, async (req, res) => {
+    try {
+        const question_id = req.params.question_id;
 
-
-    const question_id = req.params.question_id;
-    const query = `
+        const query = `
             SELECT 
                 answers.id AS answer_id,
                 answers.content AS answer_content,
@@ -342,15 +343,18 @@ app.get("/getAnswers/:question_id", authenticateToken, async (req, res) => {
                 answers.id, 
                 users.id
             ORDER BY 
-                upvote_count DESC;  -- Order by the number of upvotes, descending
+                upvote_count DESC;
         `;
-    const [response] = await connection.query(query, [question_id]);
-    return res.status(200).json(response);
 
+        const result = await connection.query(query, [question_id]);
 
-    //res.status(500).json({ error: "An error occurred while fetching answers." });
-
+        return res.status(200).json(result.rows); 
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Internal server error." });
+    }
 });
+
 
 
 app.post("/upvote/:answer_id", authenticateToken, async (req, res) => {
@@ -363,9 +367,6 @@ app.post("/upvote/:answer_id", authenticateToken, async (req, res) => {
     catch {
         res.status(401).json({ message: "error" })
     }
-
-
-    //return res.status(401).json({ error: err });
 
 })
 
@@ -461,7 +462,6 @@ app.post("/upvote/:answer_id", authenticateToken, async (req, res) => {
 })
 
 
-// Protected Route Example
 app.get("/profile", async (req, res) => {
     const authHeader = req.headers.authorization;
 
@@ -472,14 +472,13 @@ app.get("/profile", async (req, res) => {
     const token = authHeader.split(" ")[1];
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET); // Verify token
+        const decoded = jwt.verify(token, JWT_SECRET); 
         res.status(200).json({ message: "Access granted!", user: decoded });
     } catch (err) {
         return res.status(401).json({ error: "Invalid or expired token." });
     }
 });
 
-// Start Server
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

@@ -90,12 +90,6 @@ document.addEventListener("DOMContentLoaded",() =>{
         }
         
         loadQuestions();
-
-
-
-
-
-        
     }
 
 
