@@ -957,7 +957,7 @@
                     body: JSON.stringify({ content: replyText })
                 };
 
-                const response = await fetch(`http://localhost:3000/answer/${localStorage.getItem("question_id")}`,options)
+                const response = await fetch(`https://ragatanga.onrender.com/answer/${localStorage.getItem("question_id")}`,options)
                 console.log(response)
                 location.reload()
             }

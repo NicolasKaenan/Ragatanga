@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             </svg>
                             <span class="tooltiptext">Tenho essa mesma dúvida</span>
                         </button>
-                        <span class="upvote-count">${element.relevantVotes}</span>
+                        <span class="upvote-count">${element.relevantvotes}</span>
                     </div>
                     <div class="question-content" onclick="toggleAnswer(this)">
                         <div class="question-header">

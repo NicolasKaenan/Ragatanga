@@ -181,7 +181,7 @@ app.get("/questions", authenticateToken, async (req, res) => {
                 questions.subjects,
                 questions.main_response,
                 questions."created_at",
-                COUNT(relevanceVote.id) AS relevantVotes,
+                COUNT(relevancevote.id) AS relevantvotes,
                 users.user_name AS user_name,
                 users.email AS userEmail
             FROM 
@@ -432,7 +432,11 @@ app.post("/voteRelevance/:question_id", authenticateToken, async (req, res) => {
     const question_id = req.params.question_id;
     const user_id = req.user.id;
     try {
-        await connection.query("INSERT INTO relevanceVote (question_id,users_id) VALUES (?, ?)", [question_id, user_id])
+        await connection.query(
+            "INSERT INTO relevanceVote (question_id, users_id) VALUES ($1, $2)",
+            [question_id, user_id]
+        );
+        
         return res.status(200).json({ message: "voted answered" });
     }
     catch (err) {

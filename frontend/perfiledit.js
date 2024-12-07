@@ -1,10 +1,13 @@
-    const URL_PASSWORD_CHECK = "https://ragatanga.onrender.com/check-password";
-    const URL_PERFIL_EDIT = "https://ragatanga.onrender.com/edit-profile";
+const URL_PASSWORD_CHECK = "https://ragatanga.onrender.com/check-password";
+const URL_PERFIL_EDIT = "https://ragatanga.onrender.com/edit-profile";
 document.addEventListener("DOMContentLoaded", function () {
 
-    
+    if (!localStorage.getItem("user")) {
+        window.location.replace("./index.html");
+    }
+
     const form = document.getElementById('editProfileForm');
-    
+
 
     form.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -19,10 +22,10 @@ document.addEventListener("DOMContentLoaded", function () {
         showPasswordConfirmModal();
         EditProfile(data);
     });
-    
+
     const form_password = document.getElementById("passwordConfirmForm");
-    
-    form_password.addEventListener('submit', function(e){
+
+    form_password.addEventListener('submit', function (e) {
         e.preventDefault();
         const form_password = document.getElementById("passwordConfirmForm");
         const formData = new FormData(form_password);
@@ -31,10 +34,10 @@ document.addEventListener("DOMContentLoaded", function () {
         };
         checkPassword(data);
     });
-    
+
 });
 
-function checkPassword(data){
+function checkPassword(data) {
     const header = {
         method: "PUT",
         headers: {
