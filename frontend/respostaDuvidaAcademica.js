@@ -1,4 +1,4 @@
-async function sendUpvote(answer_id){
+async function sendUpvote(answer_id) {
     console.log("test")
     const response = await fetch(`https://ragatanga.onrender.com/upvote/${answer_id}`, {
         method: "POST",
@@ -10,24 +10,24 @@ async function sendUpvote(answer_id){
     location.reload()
 }
 
-document.addEventListener("DOMContentLoaded",() =>{
+document.addEventListener("DOMContentLoaded", () => {
     getDuvida()
     getAnswer()
 
     async function getDuvida() {
         async function loadDuvida() {
-            
+
         }
     }
 
-    async function getAnswer(){
-       
+    async function getAnswer() {
+
 
         async function loadQuestions() {
             const userToken = localStorage.getItem("user");
-        
+
             try {
-                
+
                 const response = await fetch(`https://ragatanga.onrender.com/getQuestion/${localStorage.getItem("question_id")}`, {
                     method: "GET",
                     headers: {
@@ -39,25 +39,24 @@ document.addEventListener("DOMContentLoaded",() =>{
                 if (response.status == (401)) {
                     window.location.replace("/");
                 }
-        
+
                 if (!response.ok) {
                     console.error("Failed to fetch questions:", response.statusText);
                     return;
                 }
-        
+
                 const data = await response.json();
                 console.log(data)
-                
-          
-        
-                data.forEach((element) => {
-                    const isAnswered = element.closed ? 1 : 0;
-                    console.log("existo")
-                    document.getElementById("questionContainer").innerHTML = `
+
+
+
+
+                const isAnswered = data.closed ? 1 : 0;
+                document.getElementById("questionContainer").innerHTML = `
                         <div class="question-full">
                 <div class="metadata-bar">
-                    <span class="subject-tag">${element.subjects[0]}</span>
-                    <span class="question-meta">Perguntado há 2 horas</span>
+                    <span class="subject-tag">${data.subjects[0]}</span>
+                    <span class="question-meta">Perguntado há ${ResponseTime(data.created_at)}</span>
                 </div>
 
                 <div class="user-info">
@@ -67,35 +66,31 @@ document.addEventListener("DOMContentLoaded",() =>{
                                 d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                         </svg>
                     </div>
-                    <span class="user-name">${element.user.user_name}</span>
+                    <span class="user-name">${data.user.user_name}</span>
                 </div>
 
-                <h1 class="question-title">${element.title}</h1>
-                <h2 class="question-subtitle">${element.subtitle}
+                <h1 class="question-title">${data.title}</h1>
+                <h2 class="question-subtitle">${data.subtitle}
                 </h2>
 
                 <div class="question-description">
-                    <p>${element.question_description}
+                    <p>${data.question_description}
                     
                 </div>
             </div>
                     `;
-        
-                    
-        
-                });
             } catch (error) {
                 console.error("Error loading questions:", error);
             }
         }
-        
+
         loadQuestions();
     }
 
 
 
 
-  
+
     answerField = `
     <div class="reply-section">
                 <button class="reply-button" onclick="toggleReplyEditor()">
@@ -113,34 +108,34 @@ document.addEventListener("DOMContentLoaded",() =>{
             </div>
             `
 
-            async function getAnswers() {
-                try {
-                    const response = await fetch(`https://ragatanga.onrender.com/getAnswers/${localStorage.getItem("question_id")}`, {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${localStorage.getItem('user')}`,  // Ensure userToken is defined
-                        },
-                    });
-                    
-                    
-                    // Check if the response is successful (status code 200-299)
-                    if (!response.ok) {
-                        throw new Error(`Error fetching answers: ${response.statusText}`);
-                    }
-                    
-                    
-                    // If successful, parse the response
-                    const data = await response.json();
+    async function getAnswers() {
+        try {
+            const response = await fetch(`https://ragatanga.onrender.com/getAnswers/${localStorage.getItem("question_id")}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem('user')}`,  // Ensure userToken is defined
+                },
+            });
 
-                    //document.getElementById("answersNumber").innerHTML = `${data.length} respostas`
-                    
-                    console.log("Received answers:", data);
-                    //onclick="upvote(this, 'answer1')
-                    primeiro = true;
-                    data.forEach(element => {
 
-                            template = `
+            // Check if the response is successful (status code 200-299)
+            if (!response.ok) {
+                throw new Error(`Error fetching answers: ${response.statusText}`);
+            }
+
+
+            // If successful, parse the response
+            const data = await response.json();
+
+            //document.getElementById("answersNumber").innerHTML = `${data.length} respostas`
+
+            console.log("Received answers:", data);
+            //onclick="upvote(this, 'answer1')
+            primeiro = true;
+            data.forEach(element => {
+
+                template = `
                     <!-- Best Answer -->
                     <div class="answer">
                         <div class="vote-section">
@@ -155,7 +150,7 @@ document.addEventListener("DOMContentLoaded",() =>{
                         <div class="answer-content">
                             <div class="answer-meta">
                                 Respondido há menos de 1 hora
-                                <span class="best-answer-badge" style="opacity : ${primeiro == true ? 1 : 0 }">Melhor resposta</span>
+                                <span class="best-answer-badge" style="opacity : ${primeiro == true ? 1 : 0}">Melhor resposta</span>
                             </div>
 
                             <div class="user-info">
@@ -171,19 +166,19 @@ document.addEventListener("DOMContentLoaded",() =>{
                             <p>${element.answer_content}</p>
                         </div>
                     </div>`
-                    document.getElementById("questionContainer").innerHTML += template;
+                document.getElementById("questionContainer").innerHTML += template;
 
 
-                    primeiro= false;
-                    });
-                } catch (error) {
-                    console.error("Error:", error);
-                }
-            }
-    
-        getAnswers().then(() =>{
-            
-    const respondTemplate = `
+                primeiro = false;
+            });
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    getAnswers().then(() => {
+
+        const respondTemplate = `
     <div class="reply-section">
                 <button class="reply-button" onclick="toggleReplyEditor()">
                     Responder
@@ -199,9 +194,32 @@ document.addEventListener("DOMContentLoaded",() =>{
                 </div>
             </div>
     `
-    document.getElementById("questionContainer").innerHTML += respondTemplate;
+        document.getElementById("questionContainer").innerHTML += respondTemplate;
 
-        })
+    })
 
 
 })
+
+function ResponseTime(data) {
+    const inputDate = new Date(data);
+    const currentDate = new Date();
+
+    const diffInMs = currentDate - inputDate;
+    const diffInSeconds = Math.floor(diffInMs / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInDays > 0) {
+        return `${diffInDays} dia${diffInDays > 1 ? 's' : ''}`;
+    } else if (diffInHours > 0) {
+        return `${diffInHours} hora${diffInHours > 1 ? 's' : ''}`;
+    } else if (diffInMinutes > 0) {
+        return `${diffInMinutes} minuto${diffInMinutes > 1 ? 's' : ''}`;
+    } else {
+        return `${diffInSeconds} segundo${diffInSeconds > 1 ? 's' : ''}`;
+    }
+}
+
+
