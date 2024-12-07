@@ -11,19 +11,11 @@ async function sendUpvote(answer_id) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    getDuvida()
     getAnswer()
-
-    async function getDuvida() {
-        async function loadDuvida() {
-
-        }
-    }
 
     async function getAnswer() {
 
-
-        async function loadQuestions() {
+        async function loadQuestion() {
             const userToken = localStorage.getItem("user");
 
             try {
@@ -48,15 +40,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 const data = await response.json();
                 console.log(data)
 
-
-
-
-                const isAnswered = data.closed ? 1 : 0;
-                document.getElementById("questionContainer").innerHTML = `
+                    const isAnswered = data.closed ? 1 : 0;
+                    console.log("existo")
+                    document.getElementById("questionContainer").innerHTML = `
                         <div class="question-full">
                 <div class="metadata-bar">
                     <span class="subject-tag">${data.subjects[0]}</span>
-                    <span class="question-meta">Perguntado há ${ResponseTime(data.created_at)}</span>
+                    <span class="question-meta">Perguntado há ${ResponseTime(data.created_at
+                    )}</span>
                 </div>
 
                 <div class="user-info">
@@ -66,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                         </svg>
                     </div>
-                    <span class="user-name">${data.user.user_name}</span>
+                    <span class="user-name">${data.user_name}</span>
                 </div>
 
                 <h1 class="question-title">${data.title}</h1>
@@ -78,13 +69,28 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                 </div>
             </div>
+
+            <div class="reply-section">
+                <button class="reply-button" onclick="toggleReplyEditor()">
+                    Responder
+                </button>
+
+                <div id="replyEditor" style="display: none;">
+                    <textarea id="replyText" placeholder="Digite sua resposta aqui..." rows="6"
+                        style="width: 100%; margin: 1rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; resize: vertical;"></textarea>
+                    <div class="reply-buttons">
+                        <button class="clear-button" onclick="clearReply()">Limpar</button>
+                        <button class="submit-button" onclick="submitReply()">Enviar</button>
+                    </div>
+                </div>
+            </div>
                     `;
             } catch (error) {
                 console.error("Error loading questions:", error);
             }
         }
 
-        loadQuestions();
+        loadQuestion();
     }
 
 
@@ -176,29 +182,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    getAnswers().then(() => {
-
-        const respondTemplate = `
-    <div class="reply-section">
-                <button class="reply-button" onclick="toggleReplyEditor()">
-                    Responder
-                </button>
-
-                <div id="replyEditor" style="display: none;">
-                    <textarea id="replyText" placeholder="Digite sua resposta aqui..." rows="6"
-                        style="width: 100%; margin: 1rem 0; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; resize: vertical;"></textarea>
-                    <div class="reply-buttons">
-                        <button class="clear-button" onclick="clearReply()">Limpar</button>
-                        <button class="submit-button" onclick="submitReply()">Enviar</button>
-                    </div>
-                </div>
-            </div>
-    `
-        document.getElementById("questionContainer").innerHTML += respondTemplate;
-
-    })
-
-
 })
 
 function ResponseTime(data) {
@@ -221,5 +204,3 @@ function ResponseTime(data) {
         return `${diffInSeconds} segundo${diffInSeconds > 1 ? 's' : ''}`;
     }
 }
-
-
