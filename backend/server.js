@@ -103,15 +103,12 @@ app.put("/check-password", authenticateToken, async (req, res) => {
 });
 
 
-// Register Route
 app.post("/register", async (req, res) => {
     try {
         const { user_name, email, password, cpf, user_type, phone_number } = req.body;
 
-        // Hash the password using bcrypt
         const password_hash = await bcrypt.hash(password, 10);
 
-        // Insert user into the database
         const query = `
             INSERT INTO users 
             (user_name, email, password_hash, cpf, user_type, phone_number) 

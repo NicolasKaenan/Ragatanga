@@ -106,6 +106,117 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
             console.error("Error loading questions:", error);
         }
+
+        try {
+            const response = await fetch('https://ragatanga.onrender.com/myQuestions', {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${userToken}`,
+                },
+            });
+            if (response.status == (401)) {
+                window.location.replace("/");
+            }
+
+            if (!response.ok) {
+                console.error("Failed to fetch questions:", response.statusText);
+                return;
+            }
+
+            const data = await response.json();
+
+            const generalContainer = document.getElementById("my-questions");
+            generalContainer.innerHTML = ""; // Clear existing content
+
+            data.forEach((element) => {
+                const isAnswered = element.closed ? 1 : 0;
+
+                // Create question card elements
+                const questionCard = document.createElement("div");
+                questionCard.classList.add("question-card");
+
+                questionCard.innerHTML = `
+                    <div class="vote-section">
+                        <button class="upvote-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" />
+                            </svg>
+                            <span class="tooltiptext">Tenho essa mesma dúvida</span>
+                        </button>
+                        <span class="upvote-count">${element.relevantvotes}</span>
+                    </div>
+
+
+
+                    <div class="question-content" onclick="toggleAnswer(this)">
+                        <div class="question-header">
+                            <div>
+                            <span class="subject-tag">${element.subjects[0]}</span>
+                            <span class="markAsAnswered" style="opacity: ${isAnswered};">Respondido</span>
+                            </div>
+                            <span class="question-meta">Perguntado há ${ResponseTime(element.created_at)}</span>
+                        </div>
+
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                </svg>
+                            </div>
+                            <span class="user-name">${element.user_name}</span>
+                        </div>
+
+                        <h3>${element.title}</h3>
+                        <p>${element.subtitle}</p>
+
+                        <div class="answer-section">
+                            <h4>Descrição da Dúvida:</h4>
+                            <p>${element.question_description}</p>
+                            <div class="button-container">
+                                <button class="see-answers" onclick="viewAnswers(this)">Ver Respostas</button>
+                                <button class="mark-answered" onclick="markAsAnswered(this)">Marcar como
+                                    respondido</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Add click handler for relevantVote
+                const voteButton = questionCard.querySelector(".upvote-button");
+                voteButton.addEventListener("click", async () => {
+                    try {
+                        const voteResponse = await fetch(`https://ragatanga.onrender.com/voteRelevance/${element.id}`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${userToken}`,
+                            },
+                        });
+
+                        if (voteResponse.status == 409) {
+                            alert("já votou!")
+                        } else if (!voteResponse.ok) {
+                            console.error("Failed to submit vote:", voteResponse.statusText);
+                        } else {
+                            console.log("Vote submitted successfully!");
+
+                            // Increment relevantVotes in the DOM
+                            const voteCountElement = questionCard.querySelector(".upvote-count");
+                            const currentVotes = parseInt(voteCountElement.textContent, 10) || 0;
+                            voteCountElement.textContent = currentVotes + 1;
+                        }
+                    } catch (error) {
+                        console.error("Error submitting vote:", error);
+                    }
+                });
+
+                generalContainer.appendChild(questionCard);
+            });
+        } catch (error) {
+            console.error("Error loading questions:", error);
+        }
     }
 
     loadQuestions();
