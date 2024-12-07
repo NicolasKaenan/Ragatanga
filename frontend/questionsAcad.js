@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             <p>${element.question_description}</p>
                             <div class="button-container">
                                 <button class="see-answers"   onclick="window.location.href = 'respostaDuvidaAcademica.html'; localStorage.setItem('question_id', ${element.id});">Ver Respostas</button>
-                                <button class="mark-answered" onclick="markAsAnswered(this, ${element.id})">Marcar como
+                                <button class="mark-answered" onclick="markAsAnswered(${element.id})">Marcar como
                                     respondido</button>
                             </div>
                         </div>
@@ -341,26 +341,10 @@ function ResponseTime(data) {
     }
 }
 
-async function markAsAnswered(button, id) {
-    button.classList.add('disabled');
-    button.disabled = true;
-    button.textContent = 'Marcado como respondido';
-
-    const questionCard = button.closest('.question-content');
-    const questionHeader = questionCard.querySelector('.question-header');
-
-    let answeredBadge = questionHeader.querySelector('.answered-badge');
-    if (!answeredBadge) {
-        answeredBadge = document.createElement('span');
-        answeredBadge.className = 'answered-badge';
-        answeredBadge.textContent = 'Respondido';
-        questionHeader.firstElementChild.appendChild(answeredBadge);
-    }
-    answeredBadge.style.display = 'inline-block';
-
+async function markAsAnswered(id) {
     try {
         const response = await fetch('https://ragatanga.onrender.com/mark-answered/'+id, {
-            method: "GET",
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${userToken}`,
@@ -375,5 +359,7 @@ async function markAsAnswered(button, id) {
     } catch (error) {
         console.error("Error loading questions:", error);
     }
+
+    window.location.reload()
 }
 
