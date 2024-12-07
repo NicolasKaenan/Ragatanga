@@ -205,12 +205,15 @@ app.get("/myQuestions", authenticateToken, async (req, res) => {
     try {
         const query = `
             SELECT 
+                questions.id,
                 questions.title,
                 questions.question_description,
+                questions.subtitle,
                 questions.closed,
                 questions.subjects,
                 questions.main_response,
                 questions."created_at",
+                users.user_name AS user_name,
                 COALESCE(COUNT(relevanceVote.id), 0) AS relevantVotes
             FROM 
                 questions
