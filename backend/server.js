@@ -404,7 +404,7 @@ app.put("/edit-profile", authenticateToken, async (req, res) => {
         }
 
         // Construir a query SQL corretamente
-        const sqlQuery = `UPDATE users SET ${updateFields.join(', ')} WHERE id = ?`;
+        const sqlQuery = `UPDATE users SET ${updateFields.join(', ')} WHERE id = $1`;
         values.push(user_id);
 
         // Executar a query
@@ -426,30 +426,41 @@ app.put("/edit-profile", authenticateToken, async (req, res) => {
     }
 });
 
-
-
 app.post("/voteRelevance/:question_id", authenticateToken, async (req, res) => {
     const question_id = req.params.question_id;
     const user_id = req.user.id;
+
     try {
-        await connection.query(
-            "INSERT INTO relevanceVote (question_id, users_id) VALUES ($1, $2)",
-            [question_id, user_id]
-        );
-        
-        return res.status(200).json({ message: "voted answered" });
+        const checkQuery = `
+            SELECT * 
+            FROM relevanceVote 
+            WHERE question_id = $1 AND users_id = $2
+        `;
+        const existingVote = await connection.query(checkQuery, [question_id, user_id]);
+
+        if (existingVote.rows.length > 0) {
+            return res.status(409).json({ message: "Vote already exists" }); 
+        }
+
+        const insertQuery = `
+            INSERT INTO relevanceVote (question_id, users_id) 
+            VALUES ($1, $2)
+        `;
+        await connection.query(insertQuery, [question_id, user_id]);
+
+        return res.status(200).json({ message: "Vote successfully added" });
+    } catch (err) {
+        return res.status(500).json({ error: "Internal server error", details: err.message });
     }
-    catch (err) {
-        return res.status(401).json({ error: err });
-    }
-})
+});
+
 
 app.post("/upvote/:answer_id", authenticateToken, async (req, res) => {
 
     const answer_id = req.params.answer_id;
     const user_id = req.user.id;
     try {
-        await connection.query("INSERT INTO upvotes (answers_id,users_id) VALUES (?, ?)", [answer_id, user_id])
+        await connection.query("INSERT INTO upvotes (answers_id,users_id) VALUES ($1, $2)", [answer_id, user_id])
         return res.status(200).json({ message: "voted answered" });
     }
     catch (err) {

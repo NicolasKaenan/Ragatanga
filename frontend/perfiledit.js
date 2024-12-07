@@ -3,7 +3,7 @@ const URL_PERFIL_EDIT = "https://ragatanga.onrender.com/edit-profile";
 document.addEventListener("DOMContentLoaded", function () {
 
     if (!localStorage.getItem("user")) {
-        window.location.replace("./index.html");
+        window.location.replace("/");
     }
 
     const form = document.getElementById('editProfileForm');

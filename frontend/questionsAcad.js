@@ -3,7 +3,7 @@ const URL_QUESTIONS = "https://ragatanga.onrender.com/question/";
 document.addEventListener("DOMContentLoaded", function () {
     async function loadQuestions() {
         const userToken = localStorage.getItem("user");
-    
+
         try {
             const response = await fetch('https://ragatanga.onrender.com/questions', {
                 method: "GET",
@@ -12,24 +12,24 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Authorization": `Bearer ${userToken}`,
                 },
             });
-    
+
             if (!response.ok) {
                 console.error("Failed to fetch questions:", response.statusText);
                 return;
             }
-    
+
             const data = await response.json();
-    
+
             const generalContainer = document.getElementById("general");
             generalContainer.innerHTML = ""; // Clear existing content
-    
+
             data.forEach((element) => {
                 const isAnswered = element.closed ? 1 : 0;
-    
+
                 // Create question card elements
                 const questionCard = document.createElement("div");
                 questionCard.classList.add("question-card");
-                
+
                 questionCard.innerHTML = `
                     <div class="vote-section">
                         <button class="upvote-button">
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                     </div>
                 `;
-    
+
                 // Add click handler for relevantVote
                 const voteButton = questionCard.querySelector(".upvote-button");
                 voteButton.addEventListener("click", async () => {
@@ -80,12 +80,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                 "Authorization": `Bearer ${userToken}`,
                             },
                         });
-                
-                        if (!voteResponse.ok) {
+
+                        if (voteResponse.status == 409) {
+                            alert("já votou!")
+                        } else if (!voteResponse.ok) {
                             console.error("Failed to submit vote:", voteResponse.statusText);
                         } else {
                             console.log("Vote submitted successfully!");
-                            
+
                             // Increment relevantVotes in the DOM
                             const voteCountElement = questionCard.querySelector(".upvote-count");
                             const currentVotes = parseInt(voteCountElement.textContent, 10) || 0;
@@ -95,16 +97,16 @@ document.addEventListener("DOMContentLoaded", function () {
                         console.error("Error submitting vote:", error);
                     }
                 });
-    
+
                 generalContainer.appendChild(questionCard);
             });
         } catch (error) {
             console.error("Error loading questions:", error);
         }
     }
-    
+
     loadQuestions();
-    
+
     const form = document.getElementById("formNewQuestion");
 
     form.addEventListener("submit", function (event) {
@@ -127,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function toggleSubject(element) {
-    element.classList.toggle('selected'); // Adiciona ou remove a classe 'selected'
+    element.classList.toggle('selected');
 }
 
 
@@ -159,9 +161,8 @@ function AddQuestion(data) {
         })
         .then(function (data) {
             console.log("Pergunta criada com sucesso:", data);
-            // Redirecionar ou atualizar a interface
             alert("Dúvida publicada com sucesso!");
-            window.location.href = "./../frontend/areaAcademica.html"; // Página com a lista de dúvidas
+            window.location.href = "./../frontend/areaAcademica.html";
         })
         .catch(function (error) {
             console.error("Erro ao criar pergunta:", error.message);
@@ -169,7 +170,7 @@ function AddQuestion(data) {
         });
 }
 
-function LoadQuestions(){
+function LoadQuestions() {
     const userToken = localStorage.getItem("user");
 
     var options = {
@@ -185,7 +186,6 @@ function LoadQuestions(){
         .then(function (response) {
             if (!response.ok) {
                 if (response.status === 422) {
-                    // Erro de validação
                     return response.json().then(data => {
                         throw new Error(data.error || "Erro de validação");
                     });
@@ -197,9 +197,8 @@ function LoadQuestions(){
         })
         .then(function (data) {
             console.log("Pergunta criada com sucesso:", data);
-            // Redirecionar ou atualizar a interface
             alert("Dúvida publicada com sucesso!");
-            window.location.href = "./../frontend/areaAcademica.html"; // Página com a lista de dúvidas
+            window.location.href = "./../frontend/areaAcademica.html"; 
         })
         .catch(function (error) {
             console.error("Erro ao criar pergunta:", error.message);
