@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                         <div class="answer-content">
                             <div class="answer-meta">
-                                Respondido há menos de 1 hora
+                                Respondido há ${ResponseTime(element.answer_created_at)}
                                 <span class="best-answer-badge" style="opacity : ${primeiro == true ? 1 : 0}">Melhor resposta</span>
                             </div>
 
