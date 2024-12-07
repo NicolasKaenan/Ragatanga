@@ -40,14 +40,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 const data = await response.json();
                 console.log(data)
 
-                    const isAnswered = data.closed ? 1 : 0;
-                    console.log("existo")
-                    document.getElementById("questionContainer").innerHTML = `
+                const isAnswered = data.closed ? 1 : 0;
+                console.log("existo")
+                document.getElementById("questionContainer").innerHTML = `
+                    <a href="areaAcademica.html" class="back-button">
+                <svg style="width:24px;height:24px;fill:#2e7d32;" viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                </svg>
+                Voltar para Perguntas
+            </a>
                         <div class="question-full">
                 <div class="metadata-bar">
                     <span class="subject-tag">${data.subjects[0]}</span>
                     <span class="question-meta">Perguntado há ${ResponseTime(data.created_at
-                    )}</span>
+                )}</span>
                 </div>
 
                 <div class="user-info">
@@ -120,24 +126,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem('user')}`,  // Ensure userToken is defined
+                    "Authorization": `Bearer ${localStorage.getItem('user')}`,
                 },
             });
 
-
-            // Check if the response is successful (status code 200-299)
             if (!response.ok) {
                 throw new Error(`Error fetching answers: ${response.statusText}`);
             }
 
 
-            // If successful, parse the response
             const data = await response.json();
 
-            //document.getElementById("answersNumber").innerHTML = `${data.length} respostas`
-
             console.log("Received answers:", data);
-            //onclick="upvote(this, 'answer1')
             primeiro = true;
             data.forEach(element => {
 
