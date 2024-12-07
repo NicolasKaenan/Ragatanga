@@ -349,7 +349,7 @@ async function markAsAnswered(id) {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${userToken}`,
             },
-        });
+        }).then(window.location.reload());
 
         if (!response.ok) {
             console.error("Failed to mark as awsered:", response.statusText);
@@ -359,7 +359,5 @@ async function markAsAnswered(id) {
     } catch (error) {
         console.error("Error loading questions:", error);
     }
-
-    window.location.reload()
 }
 
