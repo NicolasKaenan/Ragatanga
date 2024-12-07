@@ -210,8 +210,8 @@ app.get("/myQuestions", authenticateToken, async (req, res) => {
                 questions.closed,
                 questions.subjects,
                 questions.main_response,
-                questions."createdAt",
-                COUNT(relevanceVote.id) AS relevantVotes
+                questions."created_at",
+                COALESCE(COUNT(relevanceVote.id), 0) AS relevantVotes
             FROM 
                 questions
             LEFT JOIN 
@@ -223,13 +223,15 @@ app.get("/myQuestions", authenticateToken, async (req, res) => {
             GROUP BY 
                 questions.id;
         `;
+
         const result = await connection.query(query, [req.user.id]);
         res.status(200).json(result.rows);
     } catch (error) {
-        console.error(error);
+        console.error("Error fetching questions:", error);
         res.status(500).json({ error: "An error occurred while fetching questions." });
     }
 });
+
 
 app.post("/question", authenticateToken, async (req, res) => {
     const { title, subtitle, question_description, subjects } = req.body;
