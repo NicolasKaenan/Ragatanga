@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const userToken = localStorage.getItem("user");
 
         try {
-            const response = await fetch('https://ragatanga.onrender.com/questions', {
+            const response = await fetch('https://ragatanga.onrender.com/questions/questions', {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
