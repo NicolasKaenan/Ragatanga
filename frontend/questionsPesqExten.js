@@ -1,4 +1,4 @@
-const URL_QUESTIONS = "https://ragatanga.onrender.com/activity/";
+const URL_QUESTIONS = "https://ragatanga.onrender.com/question/";
 
 document.addEventListener("DOMContentLoaded", function () {
     async function loadQuestions() {
@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const data = await response.json();
 
-            const generalContainer = document.getElementById("my-questions");
+            const generalContainer = document.getElementById("my-activitys");
             generalContainer.innerHTML = ""; // Clear existing content
 
             data.forEach((element) => {
@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     loadQuestions();
 
-    const form = document.getElementById("formNewQuestion");
+    const form = document.getElementById("formNewActivity");
 
     form.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -276,7 +276,7 @@ function AddQuestion(data) {
         .then(function (data) {
             console.log("Pergunta criada com sucesso:", data);
             alert("Dúvida publicada com sucesso!");
-            window.location.href = "./../frontend/areaPesqExten.html";
+            window.location.href = "./../frontend/areaAcademica.html";
         })
         .catch(function (error) {
             console.error("Erro ao criar pergunta:", error.message);
@@ -312,7 +312,7 @@ function LoadQuestions() {
         .then(function (data) {
             console.log("Pergunta criada com sucesso:", data);
             alert("Dúvida publicada com sucesso!");
-            window.location.href = "./../frontend/areaPesqExten.html";
+            window.location.href = "./../frontend/areaAcademica.html";
         })
         .catch(function (error) {
             console.error("Erro ao criar pergunta:", error.message);
