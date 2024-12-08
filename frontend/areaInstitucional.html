@@ -640,7 +640,7 @@
                 <div class="tab-navigation">
 
                     <button class="tab-button active" onclick="switchTab('general')">Perguntas Gerais</button>
-                    <button class="tab-button" onclick="switchTab('my-questions')">Minhas Dúvidas</button>
+                    <button class="tab-button" onclick="switchTab('my-institutional')">Minhas Dúvidas</button>
                 </div>
                 <button class="add-question-button" onclick="showNewQuestionModal()"><ion-icon
                         name="add-outline"></ion-icon></button>
@@ -666,7 +666,7 @@
             <div id="general" class="tab-content active">
             </div>
 
-            <div id="my-questions" class="tab-content">
+            <div id="my-institutional" class="tab-content">
                 <div class="question-card">
                     <div class="vote-section">
                         <button class="upvote-button">
@@ -884,7 +884,7 @@
             });
         });
 
-        // Add this function to handle marking questions as answered
+        // Add this function to handle marking institutional as answered
         function markAsAnswered(button) {
             // Disable the button
             button.classList.add('disabled');
