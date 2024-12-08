@@ -276,7 +276,7 @@ function AddQuestion(data) {
         .then(function (data) {
             console.log("Pergunta criada com sucesso:", data);
             alert("Dúvida publicada com sucesso!");
-            window.location.href = "./../frontend/areaAcademica.html";
+            window.location.href = "./../frontend/areaPesqExten.html";
         })
         .catch(function (error) {
             console.error("Erro ao criar pergunta:", error.message);
@@ -312,7 +312,7 @@ function LoadQuestions() {
         .then(function (data) {
             console.log("Pergunta criada com sucesso:", data);
             alert("Dúvida publicada com sucesso!");
-            window.location.href = "./../frontend/areaAcademica.html";
+            window.location.href = "./../frontend/areaPesqExten.html";
         })
         .catch(function (error) {
             console.error("Erro ao criar pergunta:", error.message);
