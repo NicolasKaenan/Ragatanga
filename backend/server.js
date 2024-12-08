@@ -207,42 +207,43 @@ app.get("/myQuestions/:type", authenticateToken, async (req, res) => {
     try {
         const query = `
             SELECT 
-    questions.title,
-    questions.id,
-    questions.question_description,
-    questions.subtitle,
-    questions.closed,
-    questions.subjects,
-    questions.main_response,
-    questions."created_at",
-    users.user_name AS user_name,
-    COALESCE(COUNT(relevanceVote.id), 0) AS relevantVotes
-FROM 
-    questions
-LEFT JOIN 
-    relevanceVote 
-ON 
-    questions.id = relevanceVote.question_id
-LEFT JOIN 
-    users 
-ON 
-    questions.creator_id = users.id
-WHERE
-    questions.creator_id = $1
-    AND questions.type = $2
-GROUP BY 
-    users.user_name, 
-    questions.id;
+                questions.title,
+                questions.id,
+                questions.question_description,
+                questions.subtitle,
+                questions.closed,
+                questions.subjects,
+                questions.main_response,
+                questions."created_at",
+                users.user_name AS user_name,
+                COALESCE(COUNT(relevanceVote.id), 0) AS relevantVotes
+            FROM 
+                questions
+            LEFT JOIN 
+                relevanceVote 
+            ON 
+                questions.id = relevanceVote.question_id
+            LEFT JOIN 
+                users 
+            ON 
+                questions.creator_id = users.id
+            WHERE
+                questions.creator_id = $1
+                AND questions.type = $2
+            GROUP BY 
+                users.user_name, 
+                questions.id;
         `;
 
-        const result = await connection.query(query, [req.user.id], [req.params.type]);
+        // Combine os parâmetros em um único array
+        const result = await connection.query(query, [req.user.id, req.params.type]);
+
         res.status(200).json(result.rows);
     } catch (error) {
         console.error("Error fetching questions:", error);
         res.status(500).json({ error: "An error occurred while fetching questions." });
     }
 });
-
 
 app.post("/question", authenticateToken, async (req, res) => {
     const { title, subtitle, question_description, subjects } = req.body;
