@@ -15,7 +15,7 @@ const connection = new Pool({
     database: process.env.DB_DATABASE,
     port: process.env.DB_PORT || 5432,
     ssl: {
-        rejectUnauthorized: false 
+        rejectUnauthorized: false
     }
 });
 
@@ -73,16 +73,16 @@ app.get('/', (req, res) => {
 
 app.get('/frontend/:endereco', (req, res) => {
     endereco = req.params.endereco
-    res.sendFile(path.join(__dirname, './../frontend/'+endereco));
+    res.sendFile(path.join(__dirname, './../frontend/' + endereco));
 });
 
 app.put("/check-password", authenticateToken, async (req, res) => {
     const { password } = req.body;
     try {
-        const userId = req.user.id; 
+        const userId = req.user.id;
 
         const [rows] = await connection.query("SELECT password_hash FROM users WHERE id = $1", [userId]);
-        
+
         if (rows.length === 0) {
             return res.status(404).json({ error: "Usuário não encontrado." });
         }
@@ -129,7 +129,7 @@ app.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        
+
         const query = "SELECT * FROM users WHERE email = $1";
         const values = [email];
         const result = await connection.query(query, values);
@@ -149,7 +149,7 @@ app.post("/login", async (req, res) => {
         const token = jwt.sign(
             { id: user.id, user_name: user.user_name },
             JWT_SECRET,
-            { expiresIn: "1h" } 
+            { expiresIn: "1h" }
         );
 
         console.log(token);
@@ -161,7 +161,7 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get("/questions", authenticateToken, async (req, res) => {
+app.get("/questions/:type", authenticateToken, async (req, res) => {
     try {
         const query = `
             SELECT 
@@ -186,6 +186,8 @@ app.get("/questions", authenticateToken, async (req, res) => {
                 users 
             ON 
                 questions.creator_id = users.id
+            WHERE
+                questions.type = $1
             GROUP BY 
                 questions.id, 
                 users.user_name, 
@@ -193,7 +195,7 @@ app.get("/questions", authenticateToken, async (req, res) => {
             ORDER BY 
                 relevantVotes DESC;
         `;
-        const result = await connection.query(query);
+        const result = await connection.query(query, [req.params.type]);
         res.status(200).json(result.rows);
     } catch (error) {
         console.error(error);
@@ -201,38 +203,39 @@ app.get("/questions", authenticateToken, async (req, res) => {
     }
 });
 
-app.get("/myQuestions", authenticateToken, async (req, res) => {
+app.get("/myQuestions/:type", authenticateToken, async (req, res) => {
     try {
         const query = `
             SELECT 
-                questions.title,
-                questions.id,
-                questions.question_description,
-                questions.subtitle,
-                questions.closed,
-                questions.subjects,
-                questions.main_response,
-                questions."created_at",
-                users.user_name AS user_name,
-                COALESCE(COUNT(relevanceVote.id), 0) AS relevantVotes
-            FROM 
-                questions
-            LEFT JOIN 
-                relevanceVote 
-            ON 
-                questions.id = relevanceVote.question_id
-            LEFT JOIN 
-                users 
-            ON 
-                questions.creator_id = users.id
-            WHERE
-                questions.creator_id = $1
-            GROUP BY 
-                users.user_name, 
-                questions.id;
+    questions.title,
+    questions.id,
+    questions.question_description,
+    questions.subtitle,
+    questions.closed,
+    questions.subjects,
+    questions.main_response,
+    questions."created_at",
+    users.user_name AS user_name,
+    COALESCE(COUNT(relevanceVote.id), 0) AS relevantVotes
+FROM 
+    questions
+LEFT JOIN 
+    relevanceVote 
+ON 
+    questions.id = relevanceVote.question_id
+LEFT JOIN 
+    users 
+ON 
+    questions.creator_id = users.id
+WHERE
+    questions.creator_id = $1
+    AND questions.type = $2
+GROUP BY 
+    users.user_name, 
+    questions.id;
         `;
 
-        const result = await connection.query(query, [req.user.id]);
+        const result = await connection.query(query, [req.user.id], [req.params.type]);
         res.status(200).json(result.rows);
     } catch (error) {
         console.error("Error fetching questions:", error);
@@ -245,9 +248,27 @@ app.post("/question", authenticateToken, async (req, res) => {
     const { title, subtitle, question_description, subjects } = req.body;
     try {
         await connection.query(
-            `INSERT INTO questions (title, subtitle, question_description, creator_id, subjects) 
+            `INSERT INTO questions (title, subtitle, question_description, creator_id, subjects, type) 
+            VALUES ($1, $2, $3, $4, $5, $6)`,
+            [title, subtitle, question_description, req.user.id, JSON.stringify(subjects), "questions"]
+        );
+        res.status(200).json({
+            message: "Access granted",
+            user: req.user,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(401).json({ error: err });
+    }
+});
+
+app.post("/activity", authenticateToken, async (req, res) => {
+    const { title, subtitle, activity_description } = req.body;
+    try {
+        await connection.query(
+            `INSERT INTO pesqext (title, subtitle, activity_description, creator_id, type) 
             VALUES ($1, $2, $3, $4, $5)`,
-            [title, subtitle, question_description, req.user.id, JSON.stringify(subjects)]
+            [title, subtitle, activity_description, req.user.id, "activity"]
         );
         res.status(200).json({
             message: "Access granted",
@@ -355,7 +376,7 @@ app.get("/getAnswers/:question_id", authenticateToken, async (req, res) => {
 
         const result = await connection.query(query, [question_id]);
 
-        return res.status(200).json(result.rows); 
+        return res.status(200).json(result.rows);
     } catch (err) {
         console.error(err);
         return res.status(500).json({ error: "Internal server error." });
@@ -380,7 +401,7 @@ app.post("/upvote/:answer_id", authenticateToken, async (req, res) => {
 app.put("/mark-answered/:id_question", authenticateToken, async (req, res) => {
     try {
         const user_id = req.user.id;
-        const question_id = req.params.id_question; 
+        const question_id = req.params.id_question;
 
         const query = `
             UPDATE questions
@@ -413,20 +434,20 @@ app.put("/edit-profile", authenticateToken, async (req, res) => {
 
         if (password) {
             const password_hash = await bcrypt.hash(password, 10);
-            updateFields.push("password_hash = $"+(values.length + 1));
+            updateFields.push("password_hash = $" + (values.length + 1));
             values.push(password_hash);
         }
 
         if (user_name) {
-            updateFields.push("user_name = $"+(values.length + 1));
+            updateFields.push("user_name = $" + (values.length + 1));
             values.push(user_name);
         }
         if (email) {
-            updateFields.push("email = $"+(values.length + 1));
+            updateFields.push("email = $" + (values.length + 1));
             values.push(email);
         }
         if (phone_number) {
-            updateFields.push("phone_number = $"+(values.length + 1));
+            updateFields.push("phone_number = $" + (values.length + 1));
             values.push(phone_number);
         }
 
@@ -464,7 +485,7 @@ app.post("/voteRelevance/:question_id", authenticateToken, async (req, res) => {
         const existingVote = await connection.query(checkQuery, [question_id, user_id]);
 
         if (existingVote.rows.length > 0) {
-            return res.status(409).json({ message: "Vote already exists" }); 
+            return res.status(409).json({ message: "Vote already exists" });
         }
 
         const insertQuery = `
@@ -504,7 +525,7 @@ app.get("/profile", async (req, res) => {
     const token = authHeader.split(" ")[1];
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET); 
+        const decoded = jwt.verify(token, JWT_SECRET);
         res.status(200).json({ message: "Access granted!", user: decoded });
     } catch (err) {
         return res.status(401).json({ error: "Invalid or expired token." });

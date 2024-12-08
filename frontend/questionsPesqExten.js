@@ -1,11 +1,11 @@
-const URL_QUESTIONS = "https://ragatanga.onrender.com/question/";
+const URL_QUESTIONS = "https://ragatanga.onrender.com/activity/";
 
 document.addEventListener("DOMContentLoaded", function () {
     async function loadQuestions() {
         const userToken = localStorage.getItem("user");
 
         try {
-            const response = await fetch('https://ragatanga.onrender.com/questions', {
+            const response = await fetch('https://ragatanga.onrender.com/questions/activity', {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         try {
-            const response = await fetch('https://ragatanga.onrender.com/myQuestions/questions/questions', {
+            const response = await fetch('https://ragatanga.onrender.com/myQuestions/activity', {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -276,7 +276,7 @@ function AddQuestion(data) {
         .then(function (data) {
             console.log("Pergunta criada com sucesso:", data);
             alert("Dúvida publicada com sucesso!");
-            window.location.href = "./../frontend/areaAcademica.html";
+            window.location.href = "./../frontend/areaPesqExten.html";
         })
         .catch(function (error) {
             console.error("Erro ao criar pergunta:", error.message);
@@ -312,7 +312,7 @@ function LoadQuestions() {
         .then(function (data) {
             console.log("Pergunta criada com sucesso:", data);
             alert("Dúvida publicada com sucesso!");
-            window.location.href = "./../frontend/areaAcademica.html";
+            window.location.href = "./../frontend/areaPesqExten.html";
         })
         .catch(function (error) {
             console.error("Erro ao criar pergunta:", error.message);
