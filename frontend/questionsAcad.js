@@ -259,7 +259,7 @@ function AddQuestion(data) {
         body: JSON.stringify(data)
     };
 
-    fetch(URL_QUESTIONS, options)
+    fetch(URL_QUESTIONS+"questions", options)
         .then(function (response) {
             if (!response.ok) {
                 if (response.status === 422) {
@@ -296,7 +296,7 @@ function LoadQuestions() {
         body: JSON.stringify(data)
     };
 
-    fetch(URL_QUESTIONS, options)
+    fetch(URL_QUESTIONS+"questions", options)
         .then(function (response) {
             if (!response.ok) {
                 if (response.status === 422) {

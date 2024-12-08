@@ -245,13 +245,13 @@ app.get("/myQuestions/:type", authenticateToken, async (req, res) => {
     }
 });
 
-app.post("/question", authenticateToken, async (req, res) => {
+app.post("/question/:type", authenticateToken, async (req, res) => {
     const { title, subtitle, question_description, subjects } = req.body;
     try {
         await connection.query(
             `INSERT INTO questions (title, subtitle, question_description, creator_id, subjects, type) 
             VALUES ($1, $2, $3, $4, $5, $6)`,
-            [title, subtitle, question_description, req.user.id, JSON.stringify(subjects), "questions"]
+            [title, subtitle, question_description, req.user.id, JSON.stringify(subjects), req.params.type]
         );
         res.status(200).json({
             message: "Access granted",
