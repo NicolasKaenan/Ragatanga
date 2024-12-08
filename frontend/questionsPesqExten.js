@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             <h4>Descrição da Dúvida:</h4>
                             <p>${element.question_description}</p>
                             <button class="submit-answer" 
-                                onclick="window.location.href = 'respostaDuvidaAcademica.html'; localStorage.setItem('question_id', ${element.id});">
+                                onclick="window.location.href = 'respostaPesqExt.html'; localStorage.setItem('question_id', ${element.id});">
                                 Responder
                             </button>
                         </div>
@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             <h4>Descrição da Dúvida:</h4>
                             <p>${element.question_description}</p>
                             <div class="button-container">
-                                <button class="see-answers"   onclick="window.location.href = 'respostaDuvidaAcademica.html'; localStorage.setItem('question_id', ${element.id});">Ver Respostas</button>
+                                <button class="see-answers"   onclick="window.location.href = 'respostaPesqExt.html'; localStorage.setItem('question_id', ${element.id});">Ver Respostas</button>
                                 <button class="mark-answered" onclick="markAsAnswered(${element.id})">Marcar como
                                     respondido</button>
                             </div>
