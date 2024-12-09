@@ -6,7 +6,6 @@
     <title>ColaBora - Perguntas</title>
     <script src="./questionsInst.js"></script>
     <script src="./perfiledit.js"></script>
-    <script src="./perfiledit.js"></script>
     <script src="./logout.js"></script>
     
     <style>
@@ -883,28 +882,6 @@
                 this.style.pointerEvents = 'none'; // Disable further clicks
             });
         });
-
-        // Add this function to handle marking institutional as answered
-        function markAsAnswered(button) {
-            // Disable the button
-            button.classList.add('disabled');
-            button.disabled = true;
-            button.textContent = 'Marcado como respondido';
-
-            // Show the answered badge
-            const questionCard = button.closest('.question-content');
-            const questionHeader = questionCard.querySelector('.question-header');
-
-            // Check if badge already exists
-            let answeredBadge = questionHeader.querySelector('.answered-badge');
-            if (!answeredBadge) {
-                answeredBadge = document.createElement('span');
-                answeredBadge.className = 'answered-badge';
-                answeredBadge.textContent = 'Respondido';
-                questionHeader.firstElementChild.appendChild(answeredBadge);
-            }
-            answeredBadge.style.display = 'inline-block';
-        }
 
         // Add this function to handle viewing answers
         function viewAnswers(button) {
